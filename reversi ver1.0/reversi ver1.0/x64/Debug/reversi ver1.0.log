@@ -1,0 +1,4 @@
+﻿  main.cpp
+c:\users\alan\desktop\ai\alphago\project\shinareversi\reversi ver1.0\reversi ver1.0\lib\bitboard.h(136): warning C4838: conversion from '__int64' to 'LL' requires a narrowing conversion
+  reversi ver1.0.vcxproj -> C:\Users\Alan\Desktop\AI\alphago\project\shinaReversi\reversi ver1.0\x64\Debug\reversi ver1.0.exe
+  reversi ver1.0.vcxproj -> C:\Users\Alan\Desktop\AI\alphago\project\shinaReversi\reversi ver1.0\x64\Debug\reversi ver1.0.pdb (Partial PDB)
