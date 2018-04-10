@@ -5,9 +5,9 @@
 
 class ChessBoard {
 public:
-	ChessBoard(LL black=-1, LL white=-1)
+	ChessBoard(bool useOld, LL black=-1, LL white=-1)
 	{
-		if (black < 0 || white < 0)
+		if (!useOld)
 		{
 			this->black = (((LL)0b00010000) << 24 | ((LL)0b00001000) << 32);
 			this->white = (((LL)0b00001000) << 24 | ((LL)0b00010000) << 32);

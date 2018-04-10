@@ -1,0 +1,11 @@
+﻿  main.cpp
+c:\users\alan\desktop\ai\alphago\project\shinareversi\reversi ver1.0\reversi ver1.0\lib\bitboard.h(159): warning C4838: conversion from '__int64' to 'LL' requires a narrowing conversion
+  mcts.cpp
+c:\users\alan\desktop\ai\alphago\project\shinareversi\reversi ver1.0\reversi ver1.0\lib\bitboard.h(159): warning C4838: conversion from '__int64' to 'LL' requires a narrowing conversion
+mcts.cpp(40): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Generating code
+  6 of 125 functions ( 4.8%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    1 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  reversi ver1.0.vcxproj -> C:\Users\Alan\Desktop\AI\alphago\project\shinaReversi\reversi ver1.0\x64\Release\reversi ver1.0.exe

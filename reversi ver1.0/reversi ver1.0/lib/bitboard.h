@@ -20,14 +20,37 @@ inline void showBoard(Board own, Board opp)
 		else {
 			buf[i] = '-';
 		}
-		cout << buf[i] << " ";
-		if ((i + 1) % 8 == 0)
-		{
-			cout << endl;
-		}
 		own >>= 1;
 		opp >>= 1;
 	}
+	char out[9][9];
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			if (i == 0 && j == 0)	continue;
+			if (i == 0)
+			{
+				out[i][j] = '0' + j - 1;
+			}
+			else if (j == 0)
+			{
+				out[i][j] = '0' + i - 1;
+			}
+			else {
+				out[i][j] = buf[(i - 1) * 8 + (j - 1)];
+			}
+		}
+	}
+	for (int i = 0; i < 9; i++)
+	{
+		for (int j = 0; j < 9; j++)
+		{
+			cout << out[i][j] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
 }
 
 inline Board search_offset_left(Board own, Board enemy,LL mask,LL offset)
@@ -98,8 +121,8 @@ inline int countBit(Board x)
 
 inline Board flip_vertical(Board x)
 {
-	LL k1 = 0x00FF00FF00FF00FF;
-	LL k2 = 0x0000FFFF0000FFFF;
+	LL k1 = 0x00FF00FF00FF00FFull;
+	LL k2 = 0x0000FFFF0000FFFFull;
 	x = ((x >> 8) & k1) | ((x & k1) << 8);
 	x = ((x >> 16) & k2) | ((x & k2) << 16);
 	x = (x >> 32) | (x << 32);
@@ -153,7 +176,6 @@ inline Board calcFlip(Position pos, Board own, Board opp)
 	 *  @param opp: bitboard
 	 *  @param return: flip the stones of the enemy when I place stone at pos
 	 */
-	cout << "fuck" << pos << endl;
 	Board f1 = calcFlipHalf(pos, own, opp);
 	Board f2 = calcFlipHalf((~pos)&63, rotate180(own), rotate180(opp));
 	return f1 | rotate180(f2);

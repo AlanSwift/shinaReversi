@@ -1,9 +1,9 @@
 
-#include "lib\bitboard.h"
-#include "lib\reversiEnv.h"
+#include "lib\mcts.h"
 
 int main()
 {
+	/*
 	int chess[100] = {
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
@@ -47,7 +47,35 @@ int main()
 	env.render();
 	env.step(21);
 	env.render();
+	cout << env.calcFinal() << endl;*/
+
+	reversiEnv env;
+	env.render();
 	
+	Mcts * tree = new Mcts(&env, 30000);
+	int choose = tree->search();
+	cout << "uuuu" << endl;
+	cout << choose / 8 << " " << choose % 8 << endl;
+	env.step(choose);
+	env.render();
+
+	
+	int x, y;
+	while (cin >> x >> y)
+	{
+		cout << x << " " << y << endl;
+		int choose = x * 8 + y;
+		env.step(choose);
+		env.render();
+		
+		Mcts * tree = new Mcts(&env, 30000);
+		choose = tree->search();
+		cout << "uuuu" << endl;
+		cout << choose / 8 << " " << choose % 8 << endl;
+		env.step(choose);
+		env.render();
+	}
+
 
     return 0;
 }

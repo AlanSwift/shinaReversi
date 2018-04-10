@@ -2,19 +2,19 @@
 #ifndef SHINA_REVERSIENV_H
 #define SHINA_REVERSIENV_H
 #include "board.h"
-
+/*
+	nextPlayer is the player who will move next time, assume now is thinking.
+*/
 class reversiEnv
 {
 public:
 	reversiEnv() :nextPlayer(black)
 	{
-		myBoard = new ChessBoard();
+		myBoard = new ChessBoard(false);
 	}
 	reversiEnv(const reversiEnv& e):nextPlayer(e.nextPlayer)
 	{
-		myBoard = new ChessBoard();
-		myBoard->black = e.myBoard->black;
-		myBoard->white = e.myBoard->white;
+		myBoard = new ChessBoard(true, e.myBoard->black, e.myBoard->white);
 	}
 	bool step(Position action);
 	inline Board getPossibleMoves()
@@ -24,7 +24,7 @@ public:
 	}
 	inline void ChangePlayer()
 	{
-		nextPlayer ^= 1;
+		nextPlayer ^= 1ull;
 	}
 	inline int calcFinal()
 	{
@@ -42,6 +42,10 @@ public:
 	{
 		return e == black ? (findCorrectMoves(myBoard->black,myBoard->white) != 0) : (findCorrectMoves(myBoard->white,myBoard->black) != 0);
 	}
+	inline bool isOver()
+	{
+		return (findCorrectMoves(myBoard->black, myBoard->white) == 0) && (findCorrectMoves(myBoard->white, myBoard->black) == 0);
+	}
 	inline void reset(Board blackChess = -1, Board whiteChess = -1)
 	{
 		delete myBoard;
@@ -52,6 +56,11 @@ public:
 	{
 		showBoard(myBoard->black, myBoard->white);
 	}
+	inline int getPlayer()
+	{
+		return nextPlayer;
+	}
+	~reversiEnv();
 	
 private:
 	int nextPlayer;

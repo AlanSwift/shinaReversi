@@ -36,6 +36,9 @@
     <ClInclude Include="lib\reversiEnv.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="lib\mcts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -45,6 +48,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="reversiEnv.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mcts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="config.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
