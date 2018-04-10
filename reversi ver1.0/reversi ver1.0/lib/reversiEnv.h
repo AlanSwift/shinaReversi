@@ -60,7 +60,10 @@ public:
 	{
 		return nextPlayer;
 	}
-	~reversiEnv();
+	~reversiEnv()
+	{
+		delete myBoard;
+	}
 	
 private:
 	int nextPlayer;

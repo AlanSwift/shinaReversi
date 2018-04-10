@@ -20,9 +20,6 @@ bool reversiEnv::step(Position action)
 	return true;
 }
 
-reversiEnv::~reversiEnv()
-{
-	delete myBoard;
-}
+
 
 
