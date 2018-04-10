@@ -17,7 +17,6 @@ public:
 			this->white = white;
 		}
 	}
-private:
 	Board black;
 	Board white;
 };

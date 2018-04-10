@@ -1,5 +1,6 @@
 
 #include "lib\bitboard.h"
+#include "lib\reversiEnv.h"
 
 int main()
 {
@@ -38,27 +39,16 @@ int main()
 		}
 	}
 	cout << ans1 << " " << ans2 << endl;
-	cout << countBit(ans1) << " " << countBit(ans2) << endl;
-	LL ans = findCorrectMoves(ans2, ans1);
+	
+	reversiEnv env;
+	env.reset(ans2, ans1);
+	env.render();
+	env.step(29);
+	env.render();
+	env.step(21);
+	env.render();
+	
 
-	int cnt = 0;
-	while (cnt<64)
-	{
-		if (ans & 1)
-		{
-			cout << "1" << " ";
-		}
-		else {
-			cout << "0 ";
-		}
-		cnt++;
-		if (cnt % 8 == 0)
-		{
-			cout << endl;
-		}
-		ans >>= 1;
-	}
-	showBoard(ans2,ans1);
     return 0;
 }
 
