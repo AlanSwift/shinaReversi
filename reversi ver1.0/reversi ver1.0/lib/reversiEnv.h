@@ -8,11 +8,11 @@
 class reversiEnv
 {
 public:
-	reversiEnv() :nextPlayer(black)
+	reversiEnv() :nextPlayer(black),basicEval(0)
 	{
 		myBoard = new ChessBoard(false);
 	}
-	reversiEnv(const reversiEnv& e):nextPlayer(e.nextPlayer)
+	reversiEnv(const reversiEnv& e):nextPlayer(e.nextPlayer),basicEval(e.basicEval)
 	{
 		myBoard = new ChessBoard(true, e.myBoard->black, e.myBoard->white);
 	}
@@ -49,7 +49,7 @@ public:
 	inline void reset(Board blackChess = -1, Board whiteChess = -1)
 	{
 		delete myBoard;
-		myBoard = new ChessBoard(blackChess, whiteChess);
+		myBoard = new ChessBoard(true, blackChess, whiteChess);
 		nextPlayer = black;
 	}
 	inline void render()
@@ -60,6 +60,35 @@ public:
 	{
 		return nextPlayer;
 	}
+	inline double evalGameOver() const
+	{
+		/**
+		 *  Description: evaluate function 1 which to evaluate the final state
+		 *  @return: the evaluate value of the result
+		 */
+		PLL state = getOwnAndEnemy();
+		int off = countBit(state.first) - countBit(state.second);
+		return off > 0 ? (1e8 + off) : (off < 0 ? -1e8 + off : 0);
+	}
+	int evalState();
+	inline LL getHashcode()
+	{
+		hashcode = 0;
+		for (int i = 0; i < 64; i++)
+		{
+			if (myBoard->black & (1ull << i))
+			{
+				hashcode ^= PIECE_HASH_VALUE[i][black];
+			}
+			if (myBoard->white & (1ull << i))
+			{
+				hashcode ^= PIECE_HASH_VALUE[i][white];
+			}
+
+		}
+		return hashcode;
+	}
+
 	~reversiEnv()
 	{
 		delete myBoard;
@@ -68,7 +97,21 @@ public:
 private:
 	int nextPlayer;
 	ChessBoard* myBoard;
-	inline PLL& getOwnAndEnemy()
+	int basicEval;
+	LL hashcode;
+	inline int toPos(int x, int y) const
+	{
+		return x * 8 + y;
+	}
+	inline bool isEmpty(int pos) const
+	{
+		return !((myBoard->black | myBoard->white)&(1ull << pos));
+	}
+	inline bool BoardNotEmpty(Board x, int pos) const
+	{
+		return (x&(1ull << pos));
+	}
+	inline PLL& getOwnAndEnemy()const
 	{
 		return this->nextPlayer == black ? make_pair(this->myBoard->black, this->myBoard->white) :
 			make_pair(this->myBoard->white,this->myBoard->black);

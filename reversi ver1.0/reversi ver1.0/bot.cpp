@@ -91,12 +91,12 @@
 //		while (true)
 //		{
 //			auto hReq = InternetOpenUrl(
-//				hInetRoot, "http://localhost:15233/api/53684e48a4428bf021bd2f16/MY_SECRET/localai",
+//				hInetRoot, "https://www.botzone.org/api/5ac37ac5611cfd778a02ddf2/DEFAULT/localai",
 //				headers.c_str(), headers.size(), 0, NULL);
 //			if (!hReq)
 //			{
 //				// 此时可能是长时间没有新的 request 导致连接超时，再试即可
-//				Sleep(2000);
+//				cout << "fff" << endl;
 //				continue;
 //			}
 //			DWORD len;
@@ -106,6 +106,7 @@
 //				Sleep(5000);
 //				continue;
 //			}
+//			
 //			buf[len] = '\0';
 //			istringstream iss(buf);
 //			ProcessInput(iss);
@@ -120,7 +121,7 @@
 //	while (true)
 //	{
 //		BotzoneAPI::FetchNewRequest();
-//
+//		cout << "fffooo" << endl;
 //		for (auto &pair : matches)
 //		{
 //			if (pair.second.hasRequest && !pair.second.hasResponse)
@@ -132,4 +133,3 @@
 //		}
 //	}
 //}
-//

@@ -1,16 +1,21 @@
 
 #include "lib\mcts.h"
+#include "lib\hashlib.h"
+#include "lib\alphaBetaPron.h"
+
+HashLib chessHash;
+clock_t start;
 
 int main()
 {
-	/*
-	int chess[100] = {
+	
+	/*int chess[100] = {
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
-		0,0,1,1,1,0,1,1,
 		0,0,0,1,0,0,0,0,
-		0,0,1,0,0,0,0,0,
+		0,0,0,0,0,0,0,0,
+		0,0,0,0,0,1,0,0,
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0
 	};
@@ -18,10 +23,10 @@ int main()
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0,
-		0,1,0,0,0,0,0,0,
+		0,0,0,0,1,0,0,0,
+		0,0,0,1,1,1,0,0,
+		0,0,0,0,1,0,0,0,
 		0,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,
-		0,1,0,0,0,0,0,0,
 		0,0,0,0,0,0,0,0
 	};
 	LL ans1 = 0, ans2 = 0;
@@ -40,26 +45,17 @@ int main()
 	}
 	cout << ans1 << " " << ans2 << endl;
 	
+
 	reversiEnv env;
 	env.reset(ans2, ans1);
 	env.render();
-	env.step(29);
-	env.render();
-	env.step(21);
-	env.render();
-	cout << env.calcFinal() << endl;*/
-
+	env.ChangePlayer();
+	AlphaBeta* ab = new AlphaBeta(&env);
+	PII ans = ab->search(0);
+	cout << ans.first << endl;*/
+	
 	reversiEnv env;
 	env.render();
-	
-	Mcts * tree = new Mcts(&env, 30000);
-	int choose = tree->search();
-	cout << "uuuu" << endl;
-	cout << choose / 8 << " " << choose % 8 << endl;
-	env.step(choose);
-	env.render();
-
-	
 	int x, y;
 	while (cin >> x >> y)
 	{
@@ -67,9 +63,11 @@ int main()
 		int choose = x * 8 + y;
 		env.step(choose);
 		env.render();
-		
-		Mcts * tree = new Mcts(&env, 30000);
-		choose = tree->search();
+		start = clock();
+		AlphaBeta* ab = new AlphaBeta(&env);
+		//Mcts * tree = new Mcts(&env, 30000);
+		PII ans = ab->search(0);
+		choose = ans.first;
 		cout << "uuuu" << endl;
 		cout << choose / 8 << " " << choose % 8 << endl;
 		env.step(choose);

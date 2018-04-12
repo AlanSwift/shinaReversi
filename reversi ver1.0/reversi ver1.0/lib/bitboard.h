@@ -1,8 +1,31 @@
 #pragma once
 #ifndef SHINA_BITBOARD_H
 #define SHINA_BITBOARD_H
+
+
 #include "config.h"
 #include <assert.h>
+#define N(x) ((x) >> 8)
+#define S(x) ((x) << 8)
+#define W(x) (((x) & 0xfefefefefefefefeull) >> 1)
+#define E(x) (((x) & 0x7f7f7f7f7f7f7f7full) << 1)
+#define NW(x) (N(W(x)))
+#define NE(x) (N(E(x)))
+#define SW(x) (S(W(x)))
+#define SE(x) (S(E(x)))
+
+inline LL getFrontier(Board own, Board opp)
+{
+	LL empty = ~(own | opp);
+	return (N(empty)
+		| S(empty)
+		| W(empty)
+		| E(empty)
+		| NW(empty)
+		| NE(empty)
+		| SW(empty)
+		| SE(empty));
+}
 
 inline void showBoard(Board own, Board opp)
 {
@@ -107,16 +130,7 @@ inline Board findCorrectMoves(Board own, Board enemy)
 
 inline int countBit(Board x)
 {
-	int ans = 0;
-	while (x)
-	{
-		if (x & 1)
-		{
-			ans++;
-		}
-		x >>= 1;
-	}
-	return ans;
+	return __popcnt64(x);
 }
 
 inline Board flip_vertical(Board x)
