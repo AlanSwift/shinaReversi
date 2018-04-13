@@ -41,7 +41,7 @@ PII AlphaBeta::__search(reversiEnv * env, int * maxDepth)
 }
 inline bool __comp(int a, int b)
 {
-	return RankofPos[a] > RankofPos[b];
+	return RankofPos[a/8][a%8] > RankofPos[b/8][b%8];
 }
 
 PII AlphaBeta::alphaBetaSearch(int depth, int alpha, int beta, reversiEnv * env, bool requireMove)
@@ -134,17 +134,18 @@ PII AlphaBeta::alphaBetaSearch(int depth, int alpha, int beta, reversiEnv * env,
 		{
 			bestPos = moves[i];
 			bestVal = val;
-			if (val > alpha)
-			{
-				alpha = val;
-				hashtype = EXACT;
-			}
 			if (val > beta)
 			{
 				chessHash.put(env, bestVal, depth, BETA, bestPos);
 
 				return PII(bestPos, bestVal);
 			}
+			if (val > alpha)
+			{
+				alpha = val;
+				hashtype = EXACT;
+			}
+			
 		}
 	}
 	chessHash.put(env, bestVal, depth, hashtype, bestPos);

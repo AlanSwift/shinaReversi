@@ -14,16 +14,17 @@ bool reversiEnv::step(Position action)
 	state.first ^= flip;
 	state.first |= (1ull << action);
 	state.second ^= flip;
+	basicEval += RankofPos[action/8][action%8];
 
 	setOwnAndEnemy(state);
-	nextPlayer ^= 1ull;
+	ChangePlayer();
 	return true;
 }
 
 int reversiEnv::evalState()
 {
 	PLL state = getOwnAndEnemy();
-	swap(state.first, state.second);
+	//swap(state.first, state.second);
 	int my_tiles = 0, opp_tiles = 0, my_front_tiles = 0, opp_front_tiles = 0;
 	double p = 0, c = 0, l = 0, m = 0, f = 0, d = 0;
 
@@ -46,14 +47,15 @@ int reversiEnv::evalState()
 
 	// Corner occupancy
 	my_tiles = opp_tiles = 0;
-	my_tiles += (state.first&(1ull << 0));
-	opp_tiles += (state.second&(1ull << 0));
-	my_tiles += (state.first&(1ull << 7));
-	opp_tiles += (state.second&(1ull << 7));
-	my_tiles += (state.first&(1ull << 56));
-	opp_tiles += (state.second&(1ull << 56));
-	my_tiles += (state.first&(1ull << 63));
-	opp_tiles += (state.second&(1ull << 63));
+	my_tiles += BoardNotEmpty(state.first, toPos(0, 0));
+	opp_tiles += BoardNotEmpty(state.second, toPos(0, 0));
+	my_tiles += BoardNotEmpty(state.first, toPos(0, 7));
+	opp_tiles += BoardNotEmpty(state.second, toPos(0, 7));
+	my_tiles += BoardNotEmpty(state.first, toPos(7, 0));
+	opp_tiles += BoardNotEmpty(state.second, toPos(7, 0));
+	my_tiles += BoardNotEmpty(state.first, toPos(7, 7));
+	opp_tiles += BoardNotEmpty(state.second, toPos(7, 7));
+	c = 25 * (my_tiles - opp_tiles);
 	c = 25 * (my_tiles - opp_tiles);
 
 	// Corner closeness

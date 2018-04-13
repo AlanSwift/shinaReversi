@@ -58,7 +58,7 @@ public:
 				if (node.val >= beta)
 					return PII(node.bestMove, node.val);
 			}
-			cut = false;
+			*cut = false;
 		}
 
 		return PII(node.bestMove, node.val);

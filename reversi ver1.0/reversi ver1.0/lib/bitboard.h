@@ -47,6 +47,7 @@ inline void showBoard(Board own, Board opp)
 		opp >>= 1;
 	}
 	char out[9][9];
+	out[0][0] = 'A';
 	for (int i = 0; i < 9; i++)
 	{
 		for (int j = 0; j < 9; j++)

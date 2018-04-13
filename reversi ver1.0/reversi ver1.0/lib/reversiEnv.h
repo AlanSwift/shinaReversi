@@ -25,6 +25,7 @@ public:
 	inline void ChangePlayer()
 	{
 		nextPlayer ^= 1ull;
+		basicEval = -basicEval;
 	}
 	inline int calcFinal()
 	{
@@ -109,7 +110,7 @@ private:
 	}
 	inline bool BoardNotEmpty(Board x, int pos) const
 	{
-		return (x&(1ull << pos));
+		return ((x>>pos)&1);
 	}
 	inline PLL& getOwnAndEnemy()const
 	{
