@@ -76,6 +76,7 @@ public:
 
 private:
 	MctNode * rootNode;
+	int selectBest(LL allPossibleMoves,reversiEnv* env);
 	reversiEnv * env;
 	int iters;
 	int buf[64];

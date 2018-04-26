@@ -50,7 +50,7 @@
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v141</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -147,6 +147,7 @@
     <ClInclude Include="lib\board.h" />
     <ClInclude Include="lib\config.h" />
     <ClInclude Include="lib\hashlib.h" />
+    <ClInclude Include="lib\Kizina.h" />
     <ClInclude Include="lib\mcts.h" />
     <ClInclude Include="lib\reversiEnv.h" />
     <ClInclude Include="stdafx.h" />

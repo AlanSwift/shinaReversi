@@ -47,6 +47,10 @@ public:
 	{
 		return (findCorrectMoves(myBoard->black, myBoard->white) == 0) && (findCorrectMoves(myBoard->white, myBoard->black) == 0);
 	}
+	inline bool willOver()
+	{
+		return (countBit(myBoard->black) + countBit(myBoard->white)) == 63;
+	}
 	inline void reset(Board blackChess = -1, Board whiteChess = -1)
 	{
 		delete myBoard;
@@ -93,6 +97,14 @@ public:
 	~reversiEnv()
 	{
 		delete myBoard;
+	}
+	inline void copyFrom(reversiEnv*env)
+	{
+		nextPlayer = env->nextPlayer;
+		basicEval = env->basicEval;
+		myBoard->black = env->myBoard->black;
+		myBoard->white = env->myBoard->white;
+
 	}
 	
 private:

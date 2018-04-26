@@ -32,6 +32,7 @@ int reversiEnv::evalState()
 
 	// Piece difference, frontier disks and disk squares
 	LL frontier = getFrontier(state.first, state.second);
+
 	my_tiles = countBit(state.first);
 	opp_tiles = countBit(state.second);
 	my_front_tiles = countBit(frontier & state.first);

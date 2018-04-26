@@ -27,6 +27,53 @@ MctNode* MctNode::addChild(Position mov, reversiEnv * env)
 	return node;
 }
 
+int Mcts::selectBest(LL temp, reversiEnv*env)
+{
+	int cnt = 0;
+	int pos = 0;
+	reversiEnv* state=new reversiEnv(*env);
+	int bitpos = 0;
+
+	int score = -2147483647;
+	int sonScore;
+	int ans = -1;
+	//LL tmp = temp;
+	//while (temp)
+	//{
+	//	if (temp & 1)
+	//	{
+	//		buf[cnt++] = pos;
+	//	}
+	//	pos++;
+	//	temp >>= 1;
+	//}
+	////int choose = buf[rand() % cnt];
+	//temp = tmp;
+
+	while (temp)
+	{
+		bitpos=bitScanForward(temp);
+		state->copyFrom(env);
+		//state->render();
+		state->step(bitpos);
+		//state->render();
+		if (state->isOver())
+		{
+			sonScore = -state->evalGameOver();
+		}
+		else {
+			sonScore = -state->evalState();
+		}
+		if (sonScore > score)
+		{
+			score = sonScore;
+			ans = bitpos;
+		}
+		temp ^= (1LL << bitpos);
+	}
+	return ans;
+}
+
 
 int Mcts::search()
 {
@@ -50,7 +97,9 @@ int Mcts::search()
 		//debug(rootNode->allPosibleMoves);
 		if (node->allPosibleMoves != 0)
 		{
-			cnt = 0;
+			LL temp = node->allPosibleMoves;
+			int choose = selectBest(temp, state);
+			/*cnt = 0;
 			int pos = 0;
 			LL temp = node->allPosibleMoves;
 			while (temp)
@@ -62,7 +111,7 @@ int Mcts::search()
 				pos++;
 				temp >>= 1;
 			}
-			int choose = buf[rand()%cnt];
+			int choose = buf[rand()%cnt];*/
 			state->step(choose);
 			node = node->addChild(choose, state);
 		}
@@ -80,7 +129,7 @@ int Mcts::search()
 			int minVal = -100000;
 			int pos = -1;
 			Board allmoves = state->getPossibleMoves();
-			for (int j = 0; j < 64; j++)
+			/*for (int j = 0; j < 64; j++)
 			{
 				if (allmoves&(1ull << j))
 				{
@@ -90,7 +139,8 @@ int Mcts::search()
 						pos = j;
 					}
 				}
-			}
+			}*/
+			pos = selectBest(allmoves, state);
 			state->step(pos);
 		}
 		// backpropagate

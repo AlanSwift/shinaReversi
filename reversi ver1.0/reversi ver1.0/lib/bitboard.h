@@ -5,6 +5,8 @@
 
 #include "config.h"
 #include <assert.h>
+#include <intrin.h>
+
 #define N(x) ((x) >> 8)
 #define S(x) ((x) << 8)
 #define W(x) (((x) & 0xfefefefefefefefeull) >> 1)
@@ -132,6 +134,13 @@ inline Board findCorrectMoves(Board own, Board enemy)
 inline int countBit(Board x)
 {
 	return __popcnt64(x);
+}
+
+inline int bitScanForward(LL x)
+{
+	unsigned long index;
+	unsigned char noneZero=_BitScanForward64(&index, x);
+	return noneZero?index:-1;
 }
 
 inline Board flip_vertical(Board x)
