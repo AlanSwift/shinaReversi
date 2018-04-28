@@ -19,6 +19,7 @@ public:
 			assert(x < 0 || x >7 || y < 0 || y>7);
 			cntStep += 1;
 			env.step(x * 8 + y);
+			env.ChangePlayer();
 		}
 	}
 	void render()
@@ -27,10 +28,10 @@ public:
 	}
 	int search()
 	{
-		if (cntStep < 40)
+		if (cntStep < 4000)
 		{
 			
-			Mcts * tree = new Mcts(&env, 30000);
+			Mcts * tree = new Mcts(&env, 90000);
 			return tree->search();
 		}
 		else {

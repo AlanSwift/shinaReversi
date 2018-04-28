@@ -7,7 +7,7 @@ MctNode * MctNode::UCTSelectChild()
 	//cout << score << endl;
 	for (auto & e : childrens)
 	{
-		double utc = e->wins / e->visits + 0.5*sqrt(log(visits / e->visits));
+		double utc = e->wins / e->visits + 1.414*sqrt(log(visits / e->visits));
 		if (utc > score)
 		{
 			score = utc;
@@ -59,10 +59,10 @@ int Mcts::selectBest(LL temp, reversiEnv*env)
 		//state->render();
 		if (state->isOver())
 		{
-			sonScore = -state->evalGameOver();
+			sonScore = state->evalGameOver();
 		}
 		else {
-			sonScore = -state->evalState();
+			sonScore = state->evalState();
 		}
 		if (sonScore > score)
 		{
@@ -74,6 +74,8 @@ int Mcts::selectBest(LL temp, reversiEnv*env)
 	return ans;
 }
 
+int cnt1 = 0;
+int cnt0 = 0;
 
 int Mcts::search()
 {
@@ -91,6 +93,7 @@ int Mcts::search()
 			
 			node = node->UCTSelectChild();
 			state->step(node->move);
+			state->ChangePlayer();
 		}
 		
 		// expand
@@ -112,7 +115,9 @@ int Mcts::search()
 				temp >>= 1;
 			}
 			int choose = buf[rand()%cnt];*/
+			//cout << "Choose: " << choose << endl;
 			state->step(choose);
+			state->ChangePlayer();
 			node = node->addChild(choose, state);
 		}
 		//debug(rootNode->allPosibleMoves);
@@ -142,29 +147,42 @@ int Mcts::search()
 			}*/
 			pos = selectBest(allmoves, state);
 			state->step(pos);
+			state->ChangePlayer();
 		}
 		// backpropagate
+		//state->render();
 		int winner = state->calcFinal();
+		//if (winner == 1)
+		//{
+		//	cnt1++;
+		//}
+		//if (winner == 0)
+		//{
+		//	cnt0++;
+		//}
 
+		//state->render();
 		while (node != nullptr)
 		{
 			node->update(winner);
+			
 			node = node->parent;
 		}
 
 
 	}
 
-	int minVisitTimes = -1000;
+	double minVisitTimes = -2147483647;
 	int pos = -1;
 	for (auto &e : rootNode->childrens)
 	{
-		if (e->visits > minVisitTimes)
+		if (e->wins / e->visits > minVisitTimes)
 		{
-			minVisitTimes = e->visits;
+			minVisitTimes = e->wins/e->visits;
 			pos = e->move;
 		}
 	}
+	//cout << "0: " << cnt0 << " 1: " << cnt1 << endl;
 	return pos;
 
 }

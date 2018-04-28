@@ -14,10 +14,16 @@ bool reversiEnv::step(Position action)
 	state.first ^= flip;
 	state.first |= (1ull << action);
 	state.second ^= flip;
+	while (flip)
+	{
+		int bitpos = bitScanForward(flip);
+		basicEval += RankofPos[bitpos / 8][bitpos % 8]*2;
+		flip ^= (1ull << bitpos);
+	}
 	basicEval += RankofPos[action/8][action%8];
 
 	setOwnAndEnemy(state);
-	ChangePlayer();
+	//ChangePlayer();
 	return true;
 }
 
@@ -27,7 +33,8 @@ int reversiEnv::evalState()
 	//swap(state.first, state.second);
 	int my_tiles = 0, opp_tiles = 0, my_front_tiles = 0, opp_front_tiles = 0;
 	double p = 0, c = 0, l = 0, m = 0, f = 0, d = 0;
-
+	//debug(state.first);
+	//debug(state.second);
 	d = basicEval;
 
 	// Piece difference, frontier disks and disk squares
@@ -57,7 +64,7 @@ int reversiEnv::evalState()
 	my_tiles += BoardNotEmpty(state.first, toPos(7, 7));
 	opp_tiles += BoardNotEmpty(state.second, toPos(7, 7));
 	c = 25 * (my_tiles - opp_tiles);
-	c = 25 * (my_tiles - opp_tiles);
+	//c = 25 * (my_tiles - opp_tiles);
 
 	// Corner closeness
 	my_tiles = opp_tiles = 0;

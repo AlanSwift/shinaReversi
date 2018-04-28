@@ -10,6 +10,10 @@ class reversiEnv
 public:
 	reversiEnv() :nextPlayer(black),basicEval(0)
 	{
+		//black
+		//  0 1 
+		//  1 0
+		// black first
 		myBoard = new ChessBoard(false);
 	}
 	reversiEnv(const reversiEnv& e):nextPlayer(e.nextPlayer),basicEval(e.basicEval)
@@ -72,6 +76,7 @@ public:
 		 *  @return: the evaluate value of the result
 		 */
 		PLL state = getOwnAndEnemy();
+		//swap(state.first, state.second);
 		int off = countBit(state.first) - countBit(state.second);
 		return off > 0 ? (1e8 + off) : (off < 0 ? -1e8 + off : 0);
 	}

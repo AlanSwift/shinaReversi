@@ -62,6 +62,7 @@
 //		cout << x << " " << y << endl;
 //		int choose = x * 8 + y;
 //		env.step(choose);
+//		env.ChangePlayer();
 //		env.render();
 //		start = clock();
 //		//AlphaBeta* ab = new AlphaBeta(&env);
@@ -71,6 +72,7 @@
 //		cout << "uuuu" << endl;
 //		cout << choose / 8 << " " << choose % 8 << endl;
 //		env.step(choose);
+//		env.ChangePlayer();
 //		env.render();
 //	}
 //

@@ -171,10 +171,17 @@ int main()
 					if (y == -1)
 						ai_color = Player::black;
 					else
+					{
+						kizina.step(x, y);
 						ai_color = Player::white;
+					}
+						//
 					gameStart = true;
 				}
-				kizina.step(x, y);
+				else {
+					kizina.step(x, y);
+				}
+				
 					
 				int action;
 				if (ai_color == black && kizina.getPlayer() == black) {

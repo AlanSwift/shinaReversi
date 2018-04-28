@@ -10,7 +10,9 @@ public:
 		if (!useOld)
 		{
 			this->black = (((LL)0b00010000) << 24 | ((LL)0b00001000) << 32);
+			//debug(this->black);
 			this->white = (((LL)0b00001000) << 24 | ((LL)0b00010000) << 32);
+			//debug(this->white);
 		}
 		else {
 			this->black = black;

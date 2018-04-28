@@ -11,7 +11,7 @@
 class MctNode {
 public:
 	MctNode(reversiEnv*envPtr,Position mov=-1,MctNode* parentPtr=nullptr):
-		player(envPtr->getPlayer()^1),parent(parentPtr),move(mov),visits(0),wins(0)
+		player(envPtr->getPlayer()),parent(parentPtr),move(mov),visits(0),wins(0)
 	{
 		allPosibleMoves = envPtr->getPossibleMoves();
 	}
@@ -26,7 +26,8 @@ public:
 	inline void update(int winner)
 	{
 		visits++;
-		wins += (winner == player ? 1 : (winner == draw ? 0 : -1));
+		
+		wins += (winner == (player^1) ? 1 : (winner == draw ? 0 : -1));
 	}
 	
 	int player;
