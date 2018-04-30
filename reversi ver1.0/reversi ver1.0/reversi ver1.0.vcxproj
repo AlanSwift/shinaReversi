@@ -153,7 +153,6 @@
     <ClInclude Include="lib\hashlib.h" />
     <ClInclude Include="lib\mcts.h" />
     <ClInclude Include="lib\reversiEnv.h" />
-    <ClInclude Include="position.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -165,7 +164,6 @@
     <ClCompile Include="config.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mcts.cpp" />
-    <ClCompile Include="position.cpp" />
     <ClCompile Include="reversiEnv.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>

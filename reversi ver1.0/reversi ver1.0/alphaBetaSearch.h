@@ -4,7 +4,7 @@
 
 #include "constant.h"
 #include "bitboard.h"
-#include "position.h"
+#include "lib\reversiEnv.h"
 extern clock_t start;
 
 struct HashNode {
@@ -18,11 +18,11 @@ struct HashNode {
 bool isTimeUp();
 
 void initHashTable();
-SVPair probeHash(int depth, Value alpha, Value beta, const Position &pos, bool &cut);
-void recordHash(const Position &pos, Value value, int depth, HashType type, int bestMove);
+SVPair probeHash(int depth, Value alpha, Value beta, const reversiEnv &pos, bool &cut);
+void recordHash(const reversiEnv &pos, Value value, int depth, HashType type, int bestMove);
 
-SVPair alphabeta(int depth, Value alpha, Value beta, const Position &pos, bool requireMove = false);
-SVPair getBestMove(const Position &pos, int &maxdepth);
+SVPair alphabeta(int depth, Value alpha, Value beta, const reversiEnv &pos, bool requireMove = false);
+SVPair getBestMove(const reversiEnv &pos, int &maxdepth);
 
 inline bool isTimeUp()
 {

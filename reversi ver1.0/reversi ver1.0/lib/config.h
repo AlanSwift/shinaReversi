@@ -25,9 +25,9 @@ extern const int RankofPos[10][10];
 
 void debug(LL x);
 
-enum Player{
-	black,white,draw
-};
+//enum Player{
+//	black,white,draw
+//};
 
 
 #endif // !SHINA_CONFIG_H

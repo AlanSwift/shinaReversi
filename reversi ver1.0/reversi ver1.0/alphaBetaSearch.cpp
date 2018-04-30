@@ -9,7 +9,7 @@ void initHashTable()
 	memset(hashTable, 0, sizeof(hashTable));
 }
 
-SVPair probeHash(int depth, Value alpha, Value beta, const Position &pos, bool &cut)
+SVPair probeHash(int depth, Value alpha, Value beta, const reversiEnv &pos, bool &cut)
 {
 	HashValue key = pos.getHashValue();
 	int idx = key & HASH_TABLE_MASK;
@@ -38,7 +38,7 @@ SVPair probeHash(int depth, Value alpha, Value beta, const Position &pos, bool &
 	return SVPair(node.bestMove, node.value);
 }
 
-void recordHash(const Position &pos, Value value, int depth, HashType type, int bestMove)
+void recordHash(const reversiEnv &pos, Value value, int depth, HashType type, int bestMove)
 {
 	HashValue key = pos.getHashValue();
 	int idx = key & HASH_TABLE_MASK;
@@ -53,7 +53,7 @@ void recordHash(const Position &pos, Value value, int depth, HashType type, int 
 	}
 }
 
-SVPair alphabeta(int depth, Value alpha, Value beta, const Position &pos, bool requireMove)
+SVPair alphabeta(int depth, Value alpha, Value beta, const reversiEnv &pos, bool requireMove)
 {
 	if (pos.isGameEnd())
 		return SVPair(-1, pos.getGameEndEval());
@@ -78,7 +78,7 @@ SVPair alphabeta(int depth, Value alpha, Value beta, const Position &pos, bool r
 	int totMoves = pos.generateMoves(moves);
 
 	if (totMoves == 0) {
-		Position newPos(pos);
+		reversiEnv newPos(pos);
 		newPos.applyNullMove();
 		Value val = -alphabeta(depth, -beta, -alpha, newPos).second;
 		return SVPair(-1, val);
@@ -102,7 +102,7 @@ SVPair alphabeta(int depth, Value alpha, Value beta, const Position &pos, bool r
 	HashType hasht = ALPHA;
 
 	for (int i = 0; i < totMoves; ++i) {
-		Position newPos(pos);
+		reversiEnv newPos(pos);
 		newPos.applyMove(moves[i]);
 
 		Value val;
@@ -134,7 +134,7 @@ SVPair alphabeta(int depth, Value alpha, Value beta, const Position &pos, bool r
 	return SVPair(bestMove, bestValue);
 }
 
-void printBestPath(int depth, const Position &pos)
+void printBestPath(int depth, const reversiEnv &pos)
 {
 	Value val = pos.isGameEnd() ? pos.getGameEndEval() : pos.getEval();
 	printf("dep=%d, val=%d\n", depth, val);
@@ -144,13 +144,13 @@ void printBestPath(int depth, const Position &pos)
 		bool cut = false;
 		SVPair lastsv = probeHash(depth, -BND, BND, pos, cut);
 		assert(cut);
-		Position newPos(pos);
+		reversiEnv newPos(pos);
 		newPos.applyMove(lastsv.first);
 		printBestPath(depth - 1, newPos);
 	}
 }
 
-SVPair getBestMove(const Position &pos, int &maxdepth)
+SVPair getBestMove(const reversiEnv &pos, int &maxdepth)
 {
 	initHashTable();
 

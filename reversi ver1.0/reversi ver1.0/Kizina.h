@@ -1,10 +1,10 @@
 #pragma once
 #ifndef SHINA_KIZINA_H
 #define SHINA_KIZINA_H
-//#include "mcts.h"
+#include "lib\mcts.h"
 //#include "alphaBetaPron.h"
 //#include "reversiEnv.h"
-#include "position.h"
+#include "lib\reversiEnv.h"
 #include "alphaBetaSearch.h"
 
 
@@ -15,38 +15,38 @@ public:
 		if (x == -1 && y == -1)
 		{
 			cntStep += 1;
-			pos.applyNullMove();
-			//pos.applyMove(toSquare(x, y));
+			env.applyNullMove();
+			//env.applyMove(toSquare(x, y));
 			//env.ChangePlayer();
 		}
 		else {
 			//assert(x >= 0 && x <=7 && y >= 0 && y<=7);
 			cntStep += 1;
-			pos.applyMove(toSquare(x,y));
+			env.applyMove(toSquare(x,y));
 			//env.step(x * 8 + y);
 			//env.ChangePlayer();
 		}
 	}
 	void render()
 	{
-		pos.print();
+		env.print();
 		//env.render();
 	}
 	int search()
 	{
-		if (cntStep < 0)
+		if (cntStep < 500)
 		{
 			
-			/*Mcts * tree = new Mcts(&env, 90000);
-			return tree->search();*/
+			Mcts * tree = new Mcts(&env, 30000);
+			return tree->search();
 		}
 		else {
 			int tmp[MAX_MOVES];
 			int depth = 0;
 			SVPair move(-1, 0);
 			start = clock();
-			if (pos.generateMoves(tmp) > 0)
-				move = getBestMove(pos, depth);
+			if (env.generateMoves(tmp) > 0)
+				move = getBestMove(env, depth);
 			return move.first;
 			//start = clock();
 			//AlphaBeta* ab = new AlphaBeta(&env);
@@ -56,15 +56,15 @@ public:
 	int getPlayer()
 	{
 		
-		return pos.getPlayer();
+		return env.getPlayer();
 	}
 
 private:
 	int cntStep = 0;
 	int deep = 30000;
-	/*reversiEnv env;*/
+	reversiEnv env;
 	
-	Position pos;
+	/*Position pos;*/
 
 
 };
