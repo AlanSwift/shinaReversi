@@ -10,11 +10,12 @@
 #define STRSAFE_NO_DEPRECATE
 #include <strsafe.h>            // for String... functions
 #include <crtdbg.h>                // for _ASSERTE
-#include "lib\reversiEnv.h"
-#include "lib\mcts.h"
-#include "lib\alphaBetaPron.h"
-#include "lib\hashlib.h"
-#include "lib\Kizina.h"
+//#include "lib\reversiEnv.h"
+//#include "lib\mcts.h"
+//#include "lib\alphaBetaPron.h"
+//#include "lib\hashlib.h"
+#include "Kizina.h"
+//#include "lib\config.h"
 
 #define MAX_BUF 8192
 #define MAX_PLAYER_LEN 16
@@ -37,7 +38,7 @@ map<string, Match> matches;
 
 Player ai_color;
 
-HashLib chessHash;
+//HashLib chessHash;
 clock_t start;
 Kizina kizina;
 

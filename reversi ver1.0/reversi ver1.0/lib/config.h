@@ -15,13 +15,13 @@
 using namespace std;
 using Board = unsigned long long;
 using LL = unsigned long long;
-using Position = short;
+//using Position = short;
 using PLL = pair<LL, LL>;
 using PID = pair<int, double>;
 using PII = pair<int, int>;
 extern const int RankofPos[10][10];
-extern const LL PIECE_HASH_VALUE[64][2];
-extern clock_t start;
+//extern const LL PIECE_HASH_VALUE[64][2];
+//extern clock_t start;
 
 void debug(LL x);
 

@@ -1,9 +1,13 @@
 //
-//#include "lib\mcts.h"
-//#include "lib\hashlib.h"
-//#include "lib\alphaBetaPron.h"
+////#include "lib\mcts.h"
+////#include "lib\hashlib.h"
+////#include "lib\alphaBetaPron.h"
+//#include "Kizina.h"
+//#include <iostream>
+//#include <cstdio>
+//using namespace std;
 //
-//HashLib chessHash;
+////HashLib chessHash;
 //clock_t start;
 //
 //int main()
@@ -54,25 +58,29 @@
 //	PII ans = ab->search(0);
 //	cout << ans.first << endl;*/
 //	
-//	reversiEnv env;
+//	/*reversiEnv env;*/
+//	/*env.render();*/
+//	Kizina env;
 //	env.render();
 //	int x, y;
 //	while (cin >> x >> y)
 //	{
 //		cout << x << " " << y << endl;
-//		int choose = x * 8 + y;
-//		env.step(choose);
-//		env.ChangePlayer();
+//		//int choose = x * 8 + y;
+//		env.step(x,y);
+//		//env.ChangePlayer();
 //		env.render();
 //		start = clock();
 //		//AlphaBeta* ab = new AlphaBeta(&env);
-//		Mcts * tree = new Mcts(&env, 30000);
-//		choose = tree->search();
+//		/*Mcts * tree = new Mcts(&env, 30000);
+//		choose = tree->search();*/
+//		int choose=env.search();
 //		//choose = ans.first;
 //		cout << "uuuu" << endl;
 //		cout << choose / 8 << " " << choose % 8 << endl;
-//		env.step(choose);
-//		env.ChangePlayer();
+//		/*env.step(choose);
+//		env.ChangePlayer();*/
+//		env.step(choose / 8, choose % 8);
 //		env.render();
 //	}
 //

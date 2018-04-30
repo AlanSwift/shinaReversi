@@ -142,23 +142,30 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="alphaBetaSearch.h" />
+    <ClInclude Include="bitboard.h" />
+    <ClInclude Include="constant.h" />
+    <ClInclude Include="Kizina.h" />
     <ClInclude Include="lib\alphaBetaPron.h" />
     <ClInclude Include="lib\bitboard.h" />
     <ClInclude Include="lib\board.h" />
     <ClInclude Include="lib\config.h" />
     <ClInclude Include="lib\hashlib.h" />
-    <ClInclude Include="lib\Kizina.h" />
     <ClInclude Include="lib\mcts.h" />
     <ClInclude Include="lib\reversiEnv.h" />
+    <ClInclude Include="position.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="alphaBetaPron.cpp" />
+    <ClCompile Include="alphaBetaSearch.cpp" />
+    <ClCompile Include="bitboard2.cpp" />
     <ClCompile Include="bot.cpp" />
     <ClCompile Include="config.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mcts.cpp" />
+    <ClCompile Include="position.cpp" />
     <ClCompile Include="reversiEnv.cpp" />
     <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
