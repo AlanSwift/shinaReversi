@@ -145,7 +145,7 @@
     <ClInclude Include="alphaBetaSearch.h" />
     <ClInclude Include="bitboard.h" />
     <ClInclude Include="constant.h" />
-    <ClInclude Include="Kizina.h" />
+    <ClInclude Include="Kizuna.h" />
     <ClInclude Include="lib\alphaBetaPron.h" />
     <ClInclude Include="lib\bitboard.h" />
     <ClInclude Include="lib\board.h" />

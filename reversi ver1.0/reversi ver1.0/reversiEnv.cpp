@@ -69,6 +69,7 @@ Value reversiEnv::getEval() const
 	d = basicEval;
 
 	// Piece difference, frontier disks and disk squares
+	//debug(board[player]);
 	u64 frontier = getFrontier(board[player], board[player ^ 1]);
 	my_tiles = countMyPieces();
 	opp_tiles = countOppPieces();

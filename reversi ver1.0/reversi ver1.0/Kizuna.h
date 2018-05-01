@@ -8,7 +8,7 @@
 #include "alphaBetaSearch.h"
 
 
-class Kizina {
+class Kizuna {
 public:
 	void step(int x, int y)
 	{
@@ -34,7 +34,7 @@ public:
 	}
 	int search()
 	{
-		if (cntStep < 500)
+		if (cntStep < 40)
 		{
 			
 			Mcts * tree = new Mcts(&env, 30000);

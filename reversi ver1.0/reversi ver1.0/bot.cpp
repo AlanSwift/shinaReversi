@@ -14,7 +14,7 @@
 //#include "lib\mcts.h"
 //#include "lib\alphaBetaPron.h"
 //#include "lib\hashlib.h"
-#include "Kizina.h"
+#include "Kizuna.h"
 //#include "lib\config.h"
 
 #define MAX_BUF 8192
@@ -40,7 +40,7 @@ Player ai_color;
 
 //HashLib chessHash;
 clock_t start;
-Kizina kizina;
+Kizuna kizuna;
 
 bool gameStart = false;
 int x, y;
@@ -153,7 +153,7 @@ namespace BotzoneAPI
 
 int main()
 {
-	kizina.render();
+	kizuna.render();
 
 	BotzoneAPI::Init();
 	while (true)
@@ -173,51 +173,51 @@ int main()
 						ai_color = Player::black;
 					else
 					{
-						kizina.step(x, y);
+						kizuna.step(x, y);
 						ai_color = Player::white;
 					}
 						//
 					gameStart = true;
 				}
 				else {
-					kizina.step(x, y);
+					kizuna.step(x, y);
 				}
 				
 					
 				int action;
-				if (ai_color == black && kizina.getPlayer() == black) {
+				if (ai_color == black && kizuna.getPlayer() == black) {
 					cout << "^^^^^^^^^^" << endl;
 					
-					action = kizina.search();
+					action = kizuna.search();
 					if (action == -1)
 					{
 						sprintf(buffer, "{\"x\":%d,\"y\":%d}", -1, -1);
-						kizina.step(-1, -1);
+						kizuna.step(-1, -1);
 					}
 					else {
 						sprintf(buffer, "{\"x\":%d,\"y\":%d}", action / 8, action % 8);
-						kizina.step(action / 8, action % 8);
+						kizuna.step(action / 8, action % 8);
 					}
 					
 					
-					kizina.render();
+					kizuna.render();
 				}
-				else if (ai_color == white && kizina.getPlayer() == white) {
+				else if (ai_color == white && kizuna.getPlayer() == white) {
 					cout << "$$$$$$$$$" << endl;
 					
-					action = kizina.search();
+					action = kizuna.search();
 					if (action == -1)
 					{
 						sprintf(buffer, "{\"x\":%d,\"y\":%d}", -1, -1);
-						kizina.step(-1, -1);
+						kizuna.step(-1, -1);
 					}
 					else {
 						sprintf(buffer, "{\"x\":%d,\"y\":%d}", action / 8, action % 8);
-						kizina.step(action / 8, action % 8);
+						kizuna.step(action / 8, action % 8);
 					}
 
 
-					kizina.render();
+					kizuna.render();
 				}
 				else
 					sprintf(buffer, "{\"x\":%d,\"y\":%d}", -1, -1);

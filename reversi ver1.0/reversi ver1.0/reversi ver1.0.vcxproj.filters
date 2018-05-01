@@ -54,7 +54,7 @@
     <ClInclude Include="bitboard.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Kizina.h">
+    <ClInclude Include="Kizuna.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

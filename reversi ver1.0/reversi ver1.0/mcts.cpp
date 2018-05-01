@@ -34,7 +34,7 @@ int Mcts::selectBest(LL temp, reversiEnv*env)
 	reversiEnv state=reversiEnv(*env);
 	int bitpos = 0;
 
-	int score = -2147483647;
+	int score = 2147483647;
 	int sonScore;
 	int ans = -1;
 	//LL tmp = temp;
@@ -55,17 +55,20 @@ int Mcts::selectBest(LL temp, reversiEnv*env)
 		bitpos=getlsbid(temp);
 		//state = reversiEnv(*env);
 		state.copyFrom(env);
+		//state.print();
 		//state->render();
 		state.applyMove(bitpos);
+		//state.print();
 		//state->render();
+		// 5 4 3
 		if (state.isGameEnd())
 		{
-			sonScore = -state.getGameEndEval();
+			sonScore = state.getGameEndEval();
 		}
 		else {
-			sonScore = -state.getEval();
+			sonScore = state.getEval();
 		}
-		if (sonScore > score)
+		if (sonScore < score)
 		{
 			score = sonScore;
 			ans = bitpos;
@@ -175,6 +178,7 @@ int Mcts::search()
 		int winner = 0;
 		int blackC = state.countBlackPieces();
 		int whiteC = state.countWhitePieces();
+		//state.print();
 		if (blackC == whiteC)
 		{
 			winner = draw;
