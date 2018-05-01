@@ -1,10 +1,10 @@
-#ifndef SEARCH_H_
-#define SEARCH_H_
+#ifndef SHINA_SEARCH_H_
+#define SHINA_SEARCH_H_
 
 
-#include "constant.h"
+#include "config.h"
 #include "bitboard.h"
-#include "lib\reversiEnv.h"
+#include "reversiEnv.h"
 extern clock_t start;
 
 struct HashNode {
@@ -15,7 +15,6 @@ struct HashNode {
 	int bestMove;
 };
 
-bool isTimeUp();
 
 void initHashTable();
 SVPair probeHash(int depth, Value alpha, Value beta, const reversiEnv &pos, bool &cut);
@@ -24,10 +23,7 @@ void recordHash(const reversiEnv &pos, Value value, int depth, HashType type, in
 SVPair alphabeta(int depth, Value alpha, Value beta, const reversiEnv &pos, bool requireMove = false);
 SVPair getBestMove(const reversiEnv &pos, int &maxdepth);
 
-inline bool isTimeUp()
-{
-	return clock()-start > 0.98*3 * CLOCKS_PER_SEC;
-}
+
 
 inline bool approximatelyBetter(int move1, int move2)
 {

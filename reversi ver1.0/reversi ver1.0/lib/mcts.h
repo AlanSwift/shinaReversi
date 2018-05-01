@@ -3,10 +3,8 @@
 #define SHINA_MCTS_H
 
 #include "reversiEnv.h"
+extern clock_t start;
 
-/*
-	player is the player just moved.
-*/
 
 class MctNode {
 public:

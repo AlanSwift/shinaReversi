@@ -2,7 +2,6 @@
 #ifndef SHINA_BITBOARD_H
 #define SHINA_BITBOARD_H
 
-
 #include "config.h"
 #include <assert.h>
 #include <intrin.h>
@@ -133,14 +132,23 @@ inline Board findCorrectMoves(Board own, Board enemy)
 
 inline int popcount(Board x)
 {
+#ifdef _MSC_VER
 	return __popcnt64(x);
+#else
+	return __builtin_popcountll(x);
+#endif
 }
 
 inline int getlsbid(LL x)
 {
+#ifdef _MSC_VER
 	unsigned long index;
-	unsigned char noneZero=_BitScanForward64(&index, x);
-	return noneZero?index:-1;
+	unsigned char noneZero = _BitScanForward64(&index, x);
+	return noneZero ? index : -1;
+#else
+	return __builtin_ffsll(x) - 1;
+#endif
+	
 }
 inline u64 getlsb(u64 x)
 {

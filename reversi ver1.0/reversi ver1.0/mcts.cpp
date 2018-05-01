@@ -85,131 +85,148 @@ int Mcts::search()
 {
 	MctNode* node;
 	reversiEnv state;
+#ifdef FIXED_DEPTH
 	for (int i = 0; i < iters; i++)
 	{
-		//cout << i << endl;
-		node = rootNode;
-		
-		state.copyFrom(env);
-		srand(time(NULL));
-		// selection
-		//cout << "selection" << endl;
-		while (node->allPosibleMoves == 0 && !node->childrens.empty())
+#else
+	int cnt = 0;
+	while(1)
+	{
+		++cnt;
+		if (cnt % 1000 == 0 && isTimeUp())
 		{
-			
-			node = node->UCTSelectChild();
-			state.applyMove(node->move);
-			//state->step(node->move);
-			//state->ChangePlayer();
+			break;
 		}
-		
-		// expand
-		//debug(rootNode->allPosibleMoves);
-		//cout << "expand" << endl;
-		if (node->allPosibleMoves != 0)
+		else
 		{
-			LL temp = node->allPosibleMoves;
-			int choose = selectBest(temp, &state);
-			/*cnt = 0;
-			int pos = 0;
-			LL temp = node->allPosibleMoves;
-			while (temp)
-			{
-				if (temp & 1)
-				{
-					buf[cnt++] = pos;
-				}
-				pos++;
-				temp >>= 1;
-			}
-			int choose = buf[rand()%cnt];*/
-			//cout << "Choose: " << choose << endl;
-			state.applyMove(choose);
-			//state->step(choose);
-			//state->ChangePlayer();
-			node = node->addChild(choose, &state);
-		}
-		//debug(rootNode->allPosibleMoves);
-		//cout << rootNode->allPosibleMoves << endl;
-		//system("pause");
-		//cout << "simulation" << endl;
-		
-		while (!state.isGameEnd())
-		{
-			if (state.generateMovesLL() == 0)
-			{
-				state.applyNullMove();
-				continue;
-			}
-			//if (i == 61)
-			//{
-			//	state.print();
-			//	
-			//}
+#endif
+			//cout << i << endl;
+			node = rootNode;
 
-			//int minVal = -100000;
-			int pos = -1;
-			Board allmoves = state.generateMovesLL();
-			/*for (int j = 0; j < 64; j++)
+			state.copyFrom(env);
+			srand(time(NULL));
+			// selection
+			//cout << "selection" << endl;
+			while (node->allPosibleMoves == 0 && !node->childrens.empty())
 			{
-				if (allmoves&(1ull << j))
+
+				node = node->UCTSelectChild();
+				state.applyMove(node->move);
+				//state->step(node->move);
+				//state->ChangePlayer();
+			}
+
+			// expand
+			//debug(rootNode->allPosibleMoves);
+			//cout << "expand" << endl;
+			if (node->allPosibleMoves != 0)
+			{
+				LL temp = node->allPosibleMoves;
+				int choose = selectBest(temp, &state);
+				/*cnt = 0;
+				int pos = 0;
+				LL temp = node->allPosibleMoves;
+				while (temp)
 				{
-					if (RankofPos[j / 8][j % 8] > minVal)
+					if (temp & 1)
 					{
-						minVal = RankofPos[j / 8][j % 8];
-						pos = j;
+						buf[cnt++] = pos;
 					}
+					pos++;
+					temp >>= 1;
 				}
-			}*/
-			pos = selectBest(allmoves, &state);
-			//if (i == 61)
+				int choose = buf[rand()%cnt];*/
+				//cout << "Choose: " << choose << endl;
+				state.applyMove(choose);
+				//state->step(choose);
+				//state->ChangePlayer();
+				node = node->addChild(choose, &state);
+			}
+			//debug(rootNode->allPosibleMoves);
+			//cout << rootNode->allPosibleMoves << endl;
+			//system("pause");
+			//cout << "simulation" << endl;
+
+			while (!state.isGameEnd())
+			{
+				if (state.generateMovesLL() == 0)
+				{
+					state.applyNullMove();
+					continue;
+				}
+				//if (i == 61)
+				//{
+				//	state.print();
+				//	
+				//}
+
+				//int minVal = -100000;
+				int pos = -1;
+				Board allmoves = state.generateMovesLL();
+				/*for (int j = 0; j < 64; j++)
+				{
+					if (allmoves&(1ull << j))
+					{
+						if (RankofPos[j / 8][j % 8] > minVal)
+						{
+							minVal = RankofPos[j / 8][j % 8];
+							pos = j;
+						}
+					}
+				}*/
+				pos = selectBest(allmoves, &state);
+				//if (i == 61)
+				//{
+				//	state.print();
+				//	cout << "------------" << pos << endl;
+				//}
+
+				state.applyMove(pos);
+				//state->step(pos);
+				//state->ChangePlayer();
+			}
+			// backpropagate
+			//state->render();
+			//cout << "backprop" << endl;
+			int winner = 0;
+			int blackC = state.countBlackPieces();
+			int whiteC = state.countWhitePieces();
+			//state.print();
+			if (blackC == whiteC)
+			{
+				winner = draw;
+			}
+			else if (blackC > whiteC)
+			{
+				winner = black;
+			}
+			else {
+				winner = white;
+			}
+			//if (winner == 1)
 			//{
-			//	state.print();
-			//	cout << "------------" << pos << endl;
+			//	cnt1++;
 			//}
-			
-			state.applyMove(pos);
-			//state->step(pos);
-			//state->ChangePlayer();
-		}
-		// backpropagate
-		//state->render();
-		//cout << "backprop" << endl;
-		int winner = 0;
-		int blackC = state.countBlackPieces();
-		int whiteC = state.countWhitePieces();
-		//state.print();
-		if (blackC == whiteC)
-		{
-			winner = draw;
-		}
-		else if (blackC > whiteC)
-		{
-			winner = black;
-		}
-		else {
-			winner = white;
-		}
-		//if (winner == 1)
-		//{
-		//	cnt1++;
-		//}
-		//if (winner == 0)
-		//{
-		//	cnt0++;
-		//}
+			//if (winner == 0)
+			//{
+			//	cnt0++;
+			//}
 
-		//state->render();
-		while (node != nullptr)
-		{
-			node->update(winner);
-			
-			node = node->parent;
+			//state->render();
+			while (node != nullptr)
+			{
+				node->update(winner);
+
+				node = node->parent;
+			}
+			//cout << endl;
+
+#ifdef FIXED_DEPTH
+#else
 		}
-		//cout << endl;
-
-
+#endif
 	}
+
 
 	double minVisitTimes = -2147483647;
 	int pos = -1;

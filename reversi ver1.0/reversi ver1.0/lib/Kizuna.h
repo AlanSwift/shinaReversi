@@ -2,8 +2,6 @@
 #ifndef SHINA_KIZINA_H
 #define SHINA_KIZINA_H
 #include "lib\mcts.h"
-//#include "alphaBetaPron.h"
-//#include "reversiEnv.h"
 #include "lib\reversiEnv.h"
 #include "alphaBetaSearch.h"
 
@@ -34,11 +32,15 @@ public:
 	}
 	int search()
 	{
-		if (cntStep < 40)
+		if (cntStep < STEPLIMIT)
 		{
-			
+			start = clock();
 			Mcts * tree = new Mcts(&env, 30000);
-			return tree->search();
+			int ans = tree->search();
+			clock_t end = clock();
+			double time = (end - start)*1.0 / CLOCKS_PER_SEC;
+			cout << "Time: " << time << endl;
+			return ans;
 		}
 		else {
 			int tmp[MAX_MOVES];
@@ -47,10 +49,10 @@ public:
 			start = clock();
 			if (env.generateMoves(tmp) > 0)
 				move = getBestMove(env, depth);
+			clock_t end = clock();
+			double time = (end - start)*1.0 / CLOCKS_PER_SEC;
+			cout << "Time: " << time << endl;
 			return move.first;
-			//start = clock();
-			//AlphaBeta* ab = new AlphaBeta(&env);
-			//return ab->search(0).first;
 		}
 	}
 	int getPlayer()

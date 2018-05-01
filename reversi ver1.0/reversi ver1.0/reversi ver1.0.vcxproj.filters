@@ -39,22 +39,10 @@
     <ClInclude Include="lib\mcts.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\alphaBetaPron.h">
+    <ClInclude Include="lib\alphaBetaSearch.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="lib\hashlib.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="alphaBetaSearch.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="constant.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bitboard.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Kizuna.h">
+    <ClInclude Include="lib\Kizuna.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,13 +65,7 @@
     <ClCompile Include="bot.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="alphaBetaPron.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="alphaBetaSearch.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bitboard2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

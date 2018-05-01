@@ -1,10 +1,9 @@
-#ifndef POSITION_H_
-#define POSITION_H_
+#ifndef SHINA_REVERSIENV_H
+#define SHINA_REVERSIENV_H
 
-#ifndef _BOTZONE_ONLINE
-#include "constant.h"
-#include "lib\bitboard.h"
-#endif
+#include "config.h"
+#include "bitboard.h"
+
 
 inline int toSquare(int x, int y)
 {
@@ -74,7 +73,6 @@ private:
 	HashValue hashValue;
 
 	void place(int sq);
-	void replace(int sq);
 };
 
 inline bool reversiEnv::isBlackPlayer() const

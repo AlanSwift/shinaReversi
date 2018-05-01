@@ -1,6 +1,5 @@
-#ifndef _BOTZONE_ONLINE
-#include "alphaBetaSearch.h"
-#endif
+#include "lib\alphaBetaSearch.h"
+
 
 HashNode hashTable[HASH_TABLE_SIZE + 1];
 
