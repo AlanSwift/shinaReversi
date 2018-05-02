@@ -4,7 +4,6 @@
 
 #include "config.h"
 #include <assert.h>
-#include <intrin.h>
 
 #define N(x) ((x) >> 8)
 #define S(x) ((x) << 8)
@@ -189,10 +188,10 @@ inline Board rotate180(Board x)
 	return rotate90(rotate90(x));
 }
 
-inline Board calcFlipHalf(LL pos, Board own, Board opp)
+inline Board calcFlipHalf(int pos, Board own, Board opp)
 {
 	LL el[4] = { opp, opp & 0x7e7e7e7e7e7e7e7eull, opp & 0x7e7e7e7e7e7e7e7eull, opp & 0x7e7e7e7e7e7e7e7eull };
-	LL masks[4] = { 0x0101010101010100ull<<pos, 0x00000000000000fell<<pos, 0x0002040810204080ull<<pos, 0x8040201008040200ull<<pos };
+	LL masks[4] = { 0x0101010101010100ull<<pos, 0x00000000000000feull<<pos, 0x0002040810204080ull<<pos, 0x8040201008040200ull<<pos };
 	Board ans = 0;
 	LL out = 0;
 	for (int i = 0; i < 4; i++)
@@ -203,7 +202,7 @@ inline Board calcFlipHalf(LL pos, Board own, Board opp)
 	return ans;
 }
 
-inline Board calcFlip(LL pos, Board own, Board opp)
+inline Board calcFlip(int pos, Board own, Board opp)
 {
 	/**
 	 *  Description

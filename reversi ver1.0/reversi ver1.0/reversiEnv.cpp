@@ -178,3 +178,20 @@ void reversiEnv::print() const
 		printf("\n");
 	}
 }
+
+bool reversiEnv::isValidMove(int x, int y)
+{
+	if (x < 0 || x>7 || y < 0 || y>7)
+	{
+		return false;
+	}
+	LL validMoves = generateMovesLL();
+	int move = x * 8 + y;
+	if (validMoves&(1ull << move))
+	{
+		return true;
+	}
+	else {
+		return false;
+	}
+}

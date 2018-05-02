@@ -23,7 +23,7 @@ inline int getSquareY(int sq)
 class reversiEnv {
 public:
 	reversiEnv();
-
+	bool isValidMove(int x, int y);
 	bool isBlackPlayer() const;
 	bool isWhitePlayer() const;
 	bool isEmpty(int sq) const;

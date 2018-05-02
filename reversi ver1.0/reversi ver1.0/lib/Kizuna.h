@@ -1,26 +1,32 @@
 #pragma once
 #ifndef SHINA_KIZINA_H
 #define SHINA_KIZINA_H
-#include "lib\mcts.h"
-#include "lib\reversiEnv.h"
+#include "mcts.h"
 #include "alphaBetaSearch.h"
 
 
 class Kizuna {
 public:
-	void step(int x, int y)
+	bool step(int x, int y)
 	{
 		if (x == -1 && y == -1)
 		{
 			cntStep += 1;
 			env.applyNullMove();
+			return true;
 			//env.applyMove(toSquare(x, y));
 			//env.ChangePlayer();
 		}
 		else {
 			//assert(x >= 0 && x <=7 && y >= 0 && y<=7);
+			if (!env.isValidMove(x, y))
+			{
+				cout << "Invalid Moves......" << endl;
+				return false;
+			}
 			cntStep += 1;
 			env.applyMove(toSquare(x,y));
+			return true;
 			//env.step(x * 8 + y);
 			//env.ChangePlayer();
 		}

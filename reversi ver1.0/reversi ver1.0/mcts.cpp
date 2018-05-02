@@ -216,7 +216,6 @@ int Mcts::search()
 			while (node != nullptr)
 			{
 				node->update(winner);
-
 				node = node->parent;
 			}
 			//cout << endl;

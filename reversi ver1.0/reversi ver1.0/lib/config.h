@@ -11,7 +11,11 @@
 #include <algorithm>
 #include <queue>
 #include <cstring>
+
+#ifdef _MSC_VER
 #include <intrin.h>
+#endif
+
 #include <cassert>
 #define NDEBUG
 //#define FIXED_DEPTH
