@@ -28,6 +28,25 @@ int main()
 			env.step(choose / 8, choose % 8);
 		}
 		env.render();
+		if (env.isGameEnd())
+		{
+			cout << endl;
+			cout << "Game end....." << endl;
+			cout << "Black: " << env.getBlackCount() << endl;
+			cout << "White: " << env.getWhiteCount() << endl;
+			if (env.getBlackCount() > env.getWhiteCount())
+			{
+				cout << "Winner: Black!" << endl;
+			}
+			else if (env.getBlackCount() < env.getWhiteCount())
+			{
+				cout << "Winner: White!" << endl;
+			}
+			else {
+				cout << "Winner: Draw!" << endl;
+			}
+			return 0;
+		}
 	}
     return 0;
 }

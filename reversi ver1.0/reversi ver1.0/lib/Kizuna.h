@@ -66,6 +66,18 @@ public:
 		
 		return env.getPlayer();
 	}
+	bool isGameEnd()
+	{
+		return env.isGameEnd();
+	}
+	int getBlackCount()
+	{
+		return env.countBlackPieces();
+	}
+	int getWhiteCount()
+	{
+		return env.countWhitePieces();
+	}
 
 private:
 	int cntStep = 0;
