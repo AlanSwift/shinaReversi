@@ -61,24 +61,26 @@ void reversiEnv::applyNullMove()
 	changePlayer();
 }
 
-Value reversiEnv::getEval() const
+Value reversiEnv::getEval(int step) const
 {
 	int my_tiles = 0, opp_tiles = 0, my_front_tiles = 0, opp_front_tiles = 0;
 	double p = 0, c = 0, l = 0, m = 0, f = 0, d = 0;
-
+	double weight = 1;
+	
 	d = basicEval;
-
+	if (step != -1 && step < FIRSTLIMIT)	weight = -1;
 	// Piece difference, frontier disks and disk squares
 	//debug(board[player]);
+	
 	u64 frontier = getFrontier(board[player], board[player ^ 1]);
 	my_tiles = countMyPieces();
 	opp_tiles = countOppPieces();
 	my_front_tiles = popcount(frontier & board[player]);
 	opp_front_tiles = popcount(frontier & board[player ^ 1]);
 	if (my_tiles > opp_tiles)
-		p = (100.0 * my_tiles) / (my_tiles + opp_tiles);
+		p = weight*(100.0 * my_tiles) / (my_tiles + opp_tiles);
 	else if (my_tiles < opp_tiles)
-		p = -(100.0 * opp_tiles) / (my_tiles + opp_tiles);
+		p = -weight*(100.0 * opp_tiles) / (my_tiles + opp_tiles);
 	if (my_front_tiles > opp_front_tiles)
 		f = -(100.0 * my_front_tiles) / (my_front_tiles + opp_front_tiles);
 	else if (my_front_tiles < opp_front_tiles)

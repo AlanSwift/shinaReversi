@@ -40,7 +40,7 @@ public:
 	int generateMoves(int moves[]) const;
 	LL generateMovesLL();
 
-	Value getEval() const;
+	Value getEval(int step=-1) const;
 	Value getGameEndEval() const;
 
 	HashValue getHashValue() const;

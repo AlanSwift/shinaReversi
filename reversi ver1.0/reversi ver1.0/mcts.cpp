@@ -1,16 +1,21 @@
 #include "lib\mcts.h"
 
-MctNode * MctNode::UCTSelectChild()
+MctNode * MctNode::UCTSelectChild(int confidience)
 {
 	double score = -1000000;
+	double tscore;
 	MctNode* ret = nullptr;
 	//cout << score << endl;
+	double beta = sqrt( confidience/ (3 * visits + confidience));
+	
 	for (auto & e : childrens)
 	{
-		double utc = e->wins / e->visits + 1.414*sqrt(log(visits / e->visits));
-		if (utc > score)
+		//double utc = e->wins / e->visits + 1.414*sqrt(log(visits / e->visits));
+
+		tscore = (1 - beta)*e->wins / e->visits + beta*e->score+ sqrt(2*log(visits) / e->visits);
+		if (tscore > score)
 		{
-			score = utc;
+			score = tscore;
 			ret = e;
 		}
 	}
@@ -66,7 +71,7 @@ int Mcts::selectBest(LL temp, reversiEnv*env)
 			sonScore = state.getGameEndEval();
 		}
 		else {
-			sonScore = state.getEval();
+			sonScore = state.getEval(state.countAllPieces());
 		}
 		if (sonScore < score)
 		{
@@ -84,6 +89,7 @@ int cnt0 = 0;
 int Mcts::search()
 {
 	MctNode* node;
+	int choose;
 	reversiEnv state;
 #ifdef FIXED_DEPTH
 	for (int i = 0; i < iters; i++)
@@ -110,7 +116,7 @@ int Mcts::search()
 			while (node->allPosibleMoves == 0 && !node->childrens.empty())
 			{
 
-				node = node->UCTSelectChild();
+				node = node->UCTSelectChild(confidence);
 				state.applyMove(node->move);
 				//state->step(node->move);
 				//state->ChangePlayer();
@@ -121,21 +127,27 @@ int Mcts::search()
 			//cout << "expand" << endl;
 			if (node->allPosibleMoves != 0)
 			{
-				LL temp = node->allPosibleMoves;
-				int choose = selectBest(temp, &state);
-				/*cnt = 0;
-				int pos = 0;
-				LL temp = node->allPosibleMoves;
-				while (temp)
+
+				if (rand() % 100<95)
 				{
-					if (temp & 1)
-					{
-						buf[cnt++] = pos;
-					}
-					pos++;
-					temp >>= 1;
+					LL temp = node->allPosibleMoves;
+					choose = selectBest(temp, &state);
 				}
-				int choose = buf[rand()%cnt];*/
+				else {
+					int bitcnt = 0;
+					int pos = 0;
+					
+					LL temp = node->allPosibleMoves;
+					while (temp)
+					{
+						buf[bitcnt++] = getlsbid(temp);
+						
+						temp ^= getlsb(temp);
+					}
+					choose = buf[rand()%bitcnt];
+				}
+				
+				
 				//cout << "Choose: " << choose << endl;
 				state.applyMove(choose);
 				//state->step(choose);
@@ -174,7 +186,15 @@ int Mcts::search()
 						}
 					}
 				}*/
-				pos = selectBest(allmoves, &state);
+				if (rand()%100<95)
+				{
+					pos = selectBest(allmoves, &state);
+				}
+				else {
+					int cntbit=state.generateMoves(buf);
+					pos = buf[rand() % cntbit];
+				}
+				
 				//if (i == 61)
 				//{
 				//	state.print();
@@ -215,7 +235,7 @@ int Mcts::search()
 			//state->render();
 			while (node != nullptr)
 			{
-				node->update(winner);
+				node->update(winner,k);
 				node = node->parent;
 			}
 			//cout << endl;
@@ -237,6 +257,7 @@ int Mcts::search()
 			pos = e->move;
 		}
 	}
+	cout << cnt << endl;
 	//cout << "0: " << cnt0 << " 1: " << cnt1 << endl;
 	return pos;
 

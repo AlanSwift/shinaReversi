@@ -36,12 +36,12 @@ public:
 		env.print();
 		//env.render();
 	}
-	int search()
+	int search(int confidence,double k)
 	{
 		if (cntStep < STEPLIMIT)
 		{
 			start = clock();
-			Mcts * tree = new Mcts(&env, 30000);
+			Mcts * tree = new Mcts(cntStep,&env, 30000,confidence,k);
 			int ans = tree->search();
 			clock_t end = clock();
 			double time = (end - start)*1.0 / CLOCKS_PER_SEC;

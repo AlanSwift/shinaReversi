@@ -11,23 +11,33 @@ public:
 	MctNode(reversiEnv*envPtr,int mov=-1,MctNode* parentPtr=nullptr):
 		player(envPtr->getPlayer()),parent(parentPtr),move(mov),visits(0),wins(0)
 	{
+		envPtr->changePlayer();
+		if (envPtr->isGameEnd())
+		{
+			score = envPtr->getGameEndEval();
+		}
+		else {
+			score = envPtr->getEval(envPtr->countAllPieces());
+		}
+		envPtr->changePlayer();
 		allPosibleMoves = envPtr->generateMovesLL();
 	}
 	~MctNode()
 	{
 
 	}
-	MctNode* UCTSelectChild();
+	MctNode* UCTSelectChild(int conf);
 
 	MctNode* addChild(int mov, reversiEnv* env);
 	
-	inline void update(int winner)
+	inline void update(int winner,double k)
 	{
 		visits++;
 		
 		wins += (winner == (player^1) ? 1 : (winner == draw ? 0 : -1));
+		score += (winner == (player ^ 1) ? k : (winner == draw ? 0 : -k));
 	}
-	
+	double score;
 	int player;
 	vector<MctNode*>childrens;
 	MctNode* parent;
@@ -38,11 +48,11 @@ public:
 };
 class Mcts {
 public:
-	Mcts(reversiEnv* env, int iterTimes = 3000):iters(iterTimes)
+	Mcts(int cntStep,reversiEnv* env, int iterTimes = 3000,int conf=1000,double kk=100):iters(iterTimes),confidence(conf),k(kk)
 	{
 		rootNode = new MctNode(env);
 		this->env = new reversiEnv(*env);
-
+		this->cneStep = cntStep;
 	}
 	int search();
 
@@ -75,11 +85,14 @@ public:
 
 private:
 	MctNode * rootNode;
+	double k;
 	int selectBest(LL allPossibleMoves,reversiEnv* env);
 	reversiEnv * env;
 	int iters;
 	int buf[64];
 	int cnt = 0;
+	int cneStep;
+	int confidence;
 };
 
 

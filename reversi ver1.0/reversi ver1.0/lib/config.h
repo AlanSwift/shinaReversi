@@ -19,8 +19,11 @@
 #include <cassert>
 #define NDEBUG
 //#define FIXED_DEPTH
-#define TIMELIMIT 3
-#define STEPLIMIT 30
+#define TIMELIMIT 4
+#define STEPLIMIT 3000
+#define FIRSTLIMIT 15
+#define SECONDLIMIT 58
+//#define CONFIDENCE 1000
 
 using namespace std;
 using Board = unsigned long long;
