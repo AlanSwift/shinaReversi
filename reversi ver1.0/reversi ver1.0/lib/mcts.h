@@ -8,18 +8,26 @@ extern clock_t start;
 
 class MctNode {
 public:
-	MctNode(reversiEnv*envPtr,int mov=-1,MctNode* parentPtr=nullptr):
+	MctNode(reversiEnv*envPtr,int mov=-1,MctNode* parentPtr=nullptr,int tscore=-1):
 		player(envPtr->getPlayer()),parent(parentPtr),move(mov),visits(0),wins(0)
 	{
-		envPtr->changePlayer();
-		if (envPtr->isGameEnd())
+		stepCnt = envPtr->countAllPieces();
+		if (tscore == -1)
 		{
-			score = envPtr->getGameEndEval();
+			envPtr->changePlayer();
+			if (envPtr->isGameEnd())
+			{
+				score = envPtr->getGameEndEval();
+			}
+			else {
+				score = envPtr->getEval(envPtr->countAllPieces());
+			}
+			envPtr->changePlayer();
 		}
 		else {
-			score = envPtr->getEval(envPtr->countAllPieces());
+			score = tscore;
 		}
-		envPtr->changePlayer();
+		
 		allPosibleMoves = envPtr->generateMovesLL();
 	}
 	~MctNode()
@@ -28,7 +36,7 @@ public:
 	}
 	MctNode* UCTSelectChild(int conf);
 
-	MctNode* addChild(int mov, reversiEnv* env);
+	MctNode* addChild(int mov, reversiEnv* env, int score=-1);
 	
 	inline void update(int winner,double k)
 	{
@@ -44,6 +52,7 @@ public:
 	int move;
 	int visits;
 	double wins;
+	int stepCnt;
 	Board allPosibleMoves = -1;
 };
 class Mcts {
@@ -55,6 +64,18 @@ public:
 		this->cneStep = cntStep;
 	}
 	int search();
+	void recordStartTime()
+	{
+		start = clock();
+	}
+	double getTime()
+	{
+		return (clock() - start)*1.0 / CLOCKS_PER_SEC;
+	}
+	inline bool isTimeUp()
+	{
+		return clock() - start > 0.98*MCTSTIMELIMIT * CLOCKS_PER_SEC;
+	}
 
 	~Mcts()
 	{
@@ -72,7 +93,7 @@ public:
 				rabish.push(ptr);
 				for (auto & e : ptr->childrens)
 				{
-					rabish.push(e);
+					tmp.push(e);
 				}
 			}
 			while (!rabish.empty())
@@ -93,6 +114,7 @@ private:
 	int cnt = 0;
 	int cneStep;
 	int confidence;
+	clock_t start;
 };
 
 

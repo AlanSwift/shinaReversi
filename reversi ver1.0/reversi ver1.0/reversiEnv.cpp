@@ -9,6 +9,8 @@ reversiEnv::reversiEnv()
 	player = 0;
 	nullMoveCount = 0;
 	basicEval = 0;
+	truePossibleMoves = -1;
+	preSet = false;
 	hashValue = PIECE_HASH_VALUE[toSquare(3, 3)][1]
 		^ PIECE_HASH_VALUE[toSquare(3, 4)][0]
 		^ PIECE_HASH_VALUE[toSquare(4, 3)][0]
@@ -18,6 +20,20 @@ reversiEnv::reversiEnv()
 int reversiEnv::generateMoves(int moves[]) const
 {
 	u64 movesBB = findCorrectMoves(board[player], board[player ^ 1]);
+	
+	int tot = 0;
+	while (movesBB) {
+		moves[tot++] = getlsbid(movesBB);
+		movesBB ^= getlsb(movesBB);
+	}
+	assert(tot <= MAX_MOVES);
+	return tot;
+}
+
+int reversiEnv::generateMovesWithPreMove(int moves[], LL mov) const
+{
+	u64 movesBB = mov;
+
 	int tot = 0;
 	while (movesBB) {
 		moves[tot++] = getlsbid(movesBB);

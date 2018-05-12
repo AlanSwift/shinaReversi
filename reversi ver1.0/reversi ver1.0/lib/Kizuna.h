@@ -22,6 +22,8 @@ public:
 			if (!env.isValidMove(x, y))
 			{
 				cout << "Invalid Moves......" << endl;
+				cout << x << " " << y << "&&&&&&" << endl;
+				system("pause");
 				return false;
 			}
 			cntStep += 1;
@@ -38,28 +40,29 @@ public:
 	}
 	int search(int confidence,double k)
 	{
-		if (cntStep < STEPLIMIT)
-		{
-			start = clock();
-			Mcts * tree = new Mcts(cntStep,&env, 30000,confidence,k);
-			int ans = tree->search();
-			clock_t end = clock();
-			double time = (end - start)*1.0 / CLOCKS_PER_SEC;
-			cout << "Time: " << time << endl;
-			return ans;
-		}
-		else {
-			int tmp[MAX_MOVES];
-			int depth = 0;
-			SVPair move(-1, 0);
-			start = clock();
-			if (env.generateMoves(tmp) > 0)
-				move = getBestMove(env, depth);
-			clock_t end = clock();
-			double time = (end - start)*1.0 / CLOCKS_PER_SEC;
-			cout << "Time: " << time << endl;
-			return move.first;
-		}
+		//if (cntStep < STEPLIMIT)
+		//{
+		Mcts * tree = new Mcts(cntStep,&env, 30000,confidence,k);
+		initHashTable();
+		tree->recordStartTime();
+		int ans = tree->search();
+		double time = tree->getTime();
+		cout << "Time: " << time << endl;
+		delete tree;
+		return ans;
+		//}
+		//else {
+		//	int tmp[MAX_MOVES];
+		//	int depth = 0;
+		//	SVPair move(-1, 0);
+		//	start = clock();
+		//	if (env.generateMoves(tmp) > 0)
+		//		move = getBestMove(env, depth);
+		//	clock_t end = clock();
+		//	double time = (end - start)*1.0 / CLOCKS_PER_SEC;
+		//	cout << "Time: " << time << endl;
+		//	return move.first;
+		//}
 	}
 	int getPlayer()
 	{

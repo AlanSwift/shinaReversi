@@ -19,10 +19,12 @@
 #include <cassert>
 #define NDEBUG
 //#define FIXED_DEPTH
-#define TIMELIMIT 4
+#define MCTSTIMELIMIT 5
 #define STEPLIMIT 3000
 #define FIRSTLIMIT 15
 #define SECONDLIMIT 58
+#define ALPHABETATIMELIMIT 0.03
+#define ALPHABETASTEPLIMIT 0
 //#define CONFIDENCE 1000
 
 using namespace std;
@@ -102,7 +104,7 @@ struct SVPair {
 	SVPair(int x, Value y) : first(x), second(y) { }
 };
 
-const int MAX_DEPTH = 64;
+const int MAX_DEPTH = 4;
 const int MOVESORT_MIN_DEPTH = 3;
 const int DEBUG_MAX_DEPTH = 12;
 
@@ -110,10 +112,6 @@ enum Player {
 	black, white, draw
 };
 
-inline bool isTimeUp()
-{
-	return clock() - start > 0.98*TIMELIMIT * CLOCKS_PER_SEC;
-}
 
 
 

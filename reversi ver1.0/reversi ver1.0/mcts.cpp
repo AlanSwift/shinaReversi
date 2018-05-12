@@ -1,4 +1,5 @@
 #include "lib\mcts.h"
+#include "lib\alphaBetaSearch.h"
 
 MctNode * MctNode::UCTSelectChild(int confidience)
 {
@@ -12,7 +13,7 @@ MctNode * MctNode::UCTSelectChild(int confidience)
 	{
 		//double utc = e->wins / e->visits + 1.414*sqrt(log(visits / e->visits));
 
-		tscore = (1 - beta)*e->wins / e->visits + beta*e->score+ sqrt(2*log(visits) / e->visits);
+		tscore = (1 - beta)*e->wins / (e->visits+1e-8) + beta*e->score+ sqrt(2*log(visits) / (e->visits+ 1e-8));
 		if (tscore > score)
 		{
 			score = tscore;
@@ -22,11 +23,16 @@ MctNode * MctNode::UCTSelectChild(int confidience)
 	return ret;
 }
 
-MctNode* MctNode::addChild(int mov, reversiEnv * env)
+MctNode* MctNode::addChild(int mov, reversiEnv * env,int tscore)
 {
-	MctNode * node = new MctNode(env, mov, this);
+	MctNode * node = new MctNode(env, mov, this,tscore);
 	//cout << "pppp " << allPosibleMoves << endl;
+	//debug(allPosibleMoves);
+	//cout << mov / 8 << " " << mov % 8 << endl;
+	//cout << "************" << endl;
 	allPosibleMoves ^= (1ull << mov);
+	//debug(allPosibleMoves);
+	//system("pause");
 	//cout << "ffff " << allPosibleMoves << endl;
 	childrens.push_back(node);
 	return node;
@@ -42,30 +48,12 @@ int Mcts::selectBest(LL temp, reversiEnv*env)
 	int score = 2147483647;
 	int sonScore;
 	int ans = -1;
-	//LL tmp = temp;
-	//while (temp)
-	//{
-	//	if (temp & 1)
-	//	{
-	//		buf[cnt++] = pos;
-	//	}
-	//	pos++;
-	//	temp >>= 1;
-	//}
-	////int choose = buf[rand() % cnt];
-	//temp = tmp;
 
 	while (temp)
 	{
 		bitpos=getlsbid(temp);
-		//state = reversiEnv(*env);
 		state.copyFrom(env);
-		//state.print();
-		//state->render();
 		state.applyMove(bitpos);
-		//state.print();
-		//state->render();
-		// 5 4 3
 		if (state.isGameEnd())
 		{
 			sonScore = state.getGameEndEval();
@@ -99,36 +87,84 @@ int Mcts::search()
 	while(1)
 	{
 		++cnt;
-		if (cnt % 1000 == 0 && isTimeUp())
+		if (cnt % 100 == 0 && this->isTimeUp())
 		{
 			break;
 		}
 		else
 		{
 #endif
-			//cout << i << endl;
 			node = rootNode;
 
 			state.copyFrom(env);
 			srand(time(NULL));
 			// selection
-			//cout << "selection" << endl;
 			while (node->allPosibleMoves == 0 && !node->childrens.empty())
 			{
 
 				node = node->UCTSelectChild(confidence);
 				state.applyMove(node->move);
-				//state->step(node->move);
-				//state->ChangePlayer();
 			}
 
 			// expand
-			//debug(rootNode->allPosibleMoves);
-			//cout << "expand" << endl;
 			if (node->allPosibleMoves != 0)
 			{
+				//printf("%d  expand\n", node->stepCnt);
+				/*AlphabetaSearch ab;
+				ab.recordStartTime();
+				state.setTruePossibleMoves(node->allPosibleMoves);
+				state.preSet = true;
+				int depth = 0;
 
-				if (rand() % 100<95)
+				SVPair ans = ab.getBestMove(state, depth);
+				state.setTruePossibleMoves(-1);
+				state.preSet = false;
+				state.applyMove(ans.first);
+
+				node = node->addChild(choose, &state, ans.second);*/
+				if (node->stepCnt < ALPHABETASTEPLIMIT)
+				{
+					LL temp = node->allPosibleMoves;
+					choose = selectBest(temp, &state);
+					state.applyMove(choose);
+					node = node->addChild(choose, &state);
+				}
+				else {
+					//int randNum = rand() % 100;
+					if (true)
+					{
+						AlphabetaSearch ab;
+						ab.iter = cnt;
+						ab.recordStartTime();
+						state.setTruePossibleMoves(node->allPosibleMoves);
+						state.preSet = true;
+						int depth = 0;
+						
+						SVPair ans = ab.getBestMove(state, depth);
+						state.preSet = false;
+
+						state.applyMove(ans.first);
+						
+						node = node->addChild(ans.first, &state, ans.second);
+					}
+					else {
+						LL temp = node->allPosibleMoves;
+						choose = selectBest(temp, &state);
+						if (!state.isValidMove(choose / 8, choose % 8))
+						{
+							debug(node->allPosibleMoves);
+							debug(state.truePossibleMoves);
+							state.print();
+							printf("invalid  22: %d\n", choose);
+							system("pause");
+						}
+						state.applyMove(choose);
+						node = node->addChild(choose, &state);
+					}
+				}
+					
+				
+				/*if (rand() % 100<95)
 				{
 					LL temp = node->allPosibleMoves;
 					choose = selectBest(temp, &state);
@@ -146,18 +182,9 @@ int Mcts::search()
 					}
 					choose = buf[rand()%bitcnt];
 				}
-				
-				
-				//cout << "Choose: " << choose << endl;
 				state.applyMove(choose);
-				//state->step(choose);
-				//state->ChangePlayer();
-				node = node->addChild(choose, &state);
+				node = node->addChild(choose, &state);*/
 			}
-			//debug(rootNode->allPosibleMoves);
-			//cout << rootNode->allPosibleMoves << endl;
-			//system("pause");
-			//cout << "simulation" << endl;
 
 			while (!state.isGameEnd())
 			{
@@ -166,26 +193,8 @@ int Mcts::search()
 					state.applyNullMove();
 					continue;
 				}
-				//if (i == 61)
-				//{
-				//	state.print();
-				//	
-				//}
-
-				//int minVal = -100000;
 				int pos = -1;
 				Board allmoves = state.generateMovesLL();
-				/*for (int j = 0; j < 64; j++)
-				{
-					if (allmoves&(1ull << j))
-					{
-						if (RankofPos[j / 8][j % 8] > minVal)
-						{
-							minVal = RankofPos[j / 8][j % 8];
-							pos = j;
-						}
-					}
-				}*/
 				if (rand()%100<95)
 				{
 					pos = selectBest(allmoves, &state);
@@ -194,24 +203,12 @@ int Mcts::search()
 					int cntbit=state.generateMoves(buf);
 					pos = buf[rand() % cntbit];
 				}
-				
-				//if (i == 61)
-				//{
-				//	state.print();
-				//	cout << "------------" << pos << endl;
-				//}
-
 				state.applyMove(pos);
-				//state->step(pos);
-				//state->ChangePlayer();
 			}
 			// backpropagate
-			//state->render();
-			//cout << "backprop" << endl;
 			int winner = 0;
 			int blackC = state.countBlackPieces();
 			int whiteC = state.countWhitePieces();
-			//state.print();
 			if (blackC == whiteC)
 			{
 				winner = draw;
@@ -223,23 +220,11 @@ int Mcts::search()
 			else {
 				winner = white;
 			}
-			//if (winner == 1)
-			//{
-			//	cnt1++;
-			//}
-			//if (winner == 0)
-			//{
-			//	cnt0++;
-			//}
-
-			//state->render();
 			while (node != nullptr)
 			{
 				node->update(winner,k);
 				node = node->parent;
 			}
-			//cout << endl;
-
 #ifdef FIXED_DEPTH
 #else
 		}
@@ -253,12 +238,11 @@ int Mcts::search()
 	{
 		if (e->wins / e->visits > minVisitTimes)
 		{
-			minVisitTimes = e->wins/e->visits;
+			minVisitTimes = e->wins/(e->visits+1e-8);
 			pos = e->move;
 		}
 	}
 	cout << cnt << endl;
-	//cout << "0: " << cnt0 << " 1: " << cnt1 << endl;
 	return pos;
 
 }

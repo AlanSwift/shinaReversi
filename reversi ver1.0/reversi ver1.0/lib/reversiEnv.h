@@ -23,6 +23,23 @@ inline int getSquareY(int sq)
 class reversiEnv {
 public:
 	reversiEnv();
+	reversiEnv(const reversiEnv &e)
+	{
+		this->nullMoveCount = e.nullMoveCount;
+		/*
+		u64 board[2];
+	int player;
+	int nullMoveCount;
+	int basicEval;
+	HashValue hashValue;
+		*/
+		this->board[0] = e.board[0];
+		this->board[1] = e.board[1];
+		this->player = e.player;
+		this->basicEval = e.basicEval;
+		this->hashValue = e.hashValue;
+		this->preSet = false;
+	}
 	bool isValidMove(int x, int y);
 	bool isBlackPlayer() const;
 	bool isWhitePlayer() const;
@@ -38,6 +55,7 @@ public:
 	int countOppPieces() const;
 	bool isGameEnd() const;
 	int generateMoves(int moves[]) const;
+	int generateMovesWithPreMove(int moves[],LL mov)const;
 	LL generateMovesLL();
 
 	Value getEval(int step=-1) const;
@@ -64,13 +82,19 @@ public:
 		basicEval = env->basicEval;
 		hashValue = env->hashValue;
 	}
-
+	inline void setTruePossibleMoves(LL mov)
+	{
+		truePossibleMoves = mov;
+	}
+	LL truePossibleMoves = -1;
+	bool preSet = false;
 private:
 	u64 board[2];
 	int player;
 	int nullMoveCount;
 	int basicEval;
 	HashValue hashValue;
+	
 
 	void place(int sq);
 };

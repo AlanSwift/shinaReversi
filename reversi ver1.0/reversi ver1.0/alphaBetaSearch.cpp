@@ -6,15 +6,19 @@ HashNode hashTable[HASH_TABLE_SIZE + 1];
 void initHashTable()
 {
 	memset(hashTable, 0, sizeof(hashTable));
+	for (int i = 0; i < HASH_TABLE_SIZE + 1; i++)
+	{
+		hashTable[i].iter = -1;
+	}
 }
 
-SVPair probeHash(int depth, Value alpha, Value beta, const reversiEnv &pos, bool &cut)
+SVPair probeHash(int iter,int depth, Value alpha, Value beta, const reversiEnv &pos, bool &cut)
 {
 	HashValue key = pos.getHashValue();
 	int idx = key & HASH_TABLE_MASK;
 	HashNode &node = hashTable[idx];
 
-	if (node.key != key)
+	if (iter!=node.iter||node.key != key)
 		return SVPair(-1, UNKNOWN_VALUE);
 
 	if (node.depth >= depth) {
@@ -37,44 +41,63 @@ SVPair probeHash(int depth, Value alpha, Value beta, const reversiEnv &pos, bool
 	return SVPair(node.bestMove, node.value);
 }
 
-void recordHash(const reversiEnv &pos, Value value, int depth, HashType type, int bestMove)
+void recordHash(int iter,const reversiEnv &pos, Value value, int depth, HashType type, int bestMove)
 {
 	HashValue key = pos.getHashValue();
 	int idx = key & HASH_TABLE_MASK;
 	HashNode &node = hashTable[idx];
-
-	if (node.depth <= depth) {
+	if (node.iter != iter)
+	{
 		node.key = key;
 		node.value = value;
 		node.depth = depth;
 		node.type = type;
 		node.bestMove = bestMove;
+		node.iter = iter;
 	}
+	else
+	{
+		if (node.depth <= depth) {
+			node.key = key;
+			node.value = value;
+			node.depth = depth;
+			node.type = type;
+			node.bestMove = bestMove;
+		}
+	}
+	
 }
 
-SVPair alphabeta(int depth, Value alpha, Value beta, const reversiEnv &pos, bool requireMove)
+SVPair AlphabetaSearch::alphabeta(int depth, Value alpha, Value beta, const reversiEnv &pos, bool requireMove)
 {
 	if (pos.isGameEnd())
 		return SVPair(-1, pos.getGameEndEval());
 
 	bool cut = false;
-	SVPair lastsv = probeHash(depth, alpha, beta, pos, cut);
+	SVPair lastsv = probeHash(iter,depth, alpha, beta, pos, cut);
 	if (cut && (!requireMove || lastsv.first != -1))
 		return lastsv;
 
 	if (depth == 0) {
 		Value val = pos.getEval();
-		recordHash(pos, val, depth, EXACT, -1);
+		recordHash(iter,pos, val, depth, EXACT, -1);
 		return SVPair(-1, val);
 	}
 
 #ifndef FIXED_DEPTH
-	if (isTimeUp())
+	if (this->isTimeUp())
 		return SVPair(-1, pos.getEval());
 #endif
 
 	int moves[MAX_MOVES];
-	int totMoves = pos.generateMoves(moves);
+	int totMoves;
+	if (pos.preSet)
+	{
+		totMoves = pos.generateMovesWithPreMove(moves,pos.truePossibleMoves);
+	}
+	else {
+		totMoves = pos.generateMoves(moves);
+	}
 
 	if (totMoves == 0) {
 		reversiEnv newPos(pos);
@@ -118,7 +141,7 @@ SVPair alphabeta(int depth, Value alpha, Value beta, const reversiEnv &pos, bool
 			bestValue = val;
 			bestMove = moves[i];
 			if (val >= beta) {
-				recordHash(pos, bestValue, depth, BETA, bestMove);
+				recordHash(iter, pos, bestValue, depth, BETA, bestMove);
 				return SVPair(bestMove, bestValue);
 			}
 			if (val > alpha) {
@@ -128,12 +151,12 @@ SVPair alphabeta(int depth, Value alpha, Value beta, const reversiEnv &pos, bool
 		}
 	}
 
-	recordHash(pos, bestValue, depth, hasht, bestMove);
+	recordHash(iter,pos, bestValue, depth, hasht, bestMove);
 
 	return SVPair(bestMove, bestValue);
 }
 
-void printBestPath(int depth, const reversiEnv &pos)
+void AlphabetaSearch::printBestPath(int depth, const reversiEnv &pos)
 {
 	Value val = pos.isGameEnd() ? pos.getGameEndEval() : pos.getEval();
 	printf("dep=%d, val=%d\n", depth, val);
@@ -141,7 +164,7 @@ void printBestPath(int depth, const reversiEnv &pos)
 
 	if (depth != 0) {
 		bool cut = false;
-		SVPair lastsv = probeHash(depth, -BND, BND, pos, cut);
+		SVPair lastsv = probeHash(iter,depth, -BND, BND, pos, cut);
 		assert(cut);
 		reversiEnv newPos(pos);
 		newPos.applyMove(lastsv.first);
@@ -149,10 +172,10 @@ void printBestPath(int depth, const reversiEnv &pos)
 	}
 }
 
-SVPair getBestMove(const reversiEnv &pos, int &maxdepth)
+SVPair AlphabetaSearch::getBestMove(const reversiEnv &pos, int &maxdepth)
 {
-	initHashTable();
-
+	//initHashTable();
+	//printf("11111\n");
 	SVPair ret(-1, 0);
 
 #ifndef FIXED_DEPTH
@@ -160,9 +183,11 @@ SVPair getBestMove(const reversiEnv &pos, int &maxdepth)
 #else
 	for (int depth = 1; depth <= DEBUG_MAX_DEPTH; ++depth) {
 #endif
-
+		//printf("depth: %d\n", depth);
 		SVPair cur = alphabeta(depth, -BND, +BND, pos, true);
 
+		ret = cur;
+		maxdepth = depth;
 #ifndef FIXED_DEPTH
 		if (isTimeUp())
 			break;
@@ -170,13 +195,12 @@ SVPair getBestMove(const reversiEnv &pos, int &maxdepth)
 		printf("finish depth %d (%d,%d)\n", depth, cur.first, cur.second);
 #endif
 
-		ret = cur;
-		maxdepth = depth;
+		
 	}
 
 	// #ifdef FIXED_DEPTH
 	//     printBestPath(DEBUG_MAX_DEPTH, pos);
 	// #endif
-
+	//cout << maxdepth << endl;
 	return ret;
-	}
+}
