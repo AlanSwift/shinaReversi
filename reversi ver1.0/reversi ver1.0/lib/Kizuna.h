@@ -2,7 +2,6 @@
 #ifndef SHINA_KIZINA_H
 #define SHINA_KIZINA_H
 #include "mcts.h"
-#include "alphaBetaSearch.h"
 
 
 class Kizuna {
@@ -40,8 +39,6 @@ public:
 	}
 	int search(int confidence,double k)
 	{
-		//if (cntStep < STEPLIMIT)
-		//{
 		Mcts * tree = new Mcts(cntStep,&env, 30000,confidence,k);
 		initHashTable();
 		tree->recordStartTime();
@@ -50,19 +47,6 @@ public:
 		cout << "Time: " << time << endl;
 		delete tree;
 		return ans;
-		//}
-		//else {
-		//	int tmp[MAX_MOVES];
-		//	int depth = 0;
-		//	SVPair move(-1, 0);
-		//	start = clock();
-		//	if (env.generateMoves(tmp) > 0)
-		//		move = getBestMove(env, depth);
-		//	clock_t end = clock();
-		//	double time = (end - start)*1.0 / CLOCKS_PER_SEC;
-		//	cout << "Time: " << time << endl;
-		//	return move.first;
-		//}
 	}
 	int getPlayer()
 	{
